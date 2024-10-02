@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { addBookmark, deleteBookmark, getBookmarks } from "./util/bookmark";
-import { useEffect } from "react";
+import { useFetcher, Form } from "react-router-dom";
 
-function Article({ articles = [], errorMes = '' }) {
+
+function Article({ articles, errorMes}) {
     const [bookmarked, setBookmarked] = useState([]);
     const [bookmarkLoaded, setBookmarkLoaded] = useState(false);
 
@@ -10,7 +11,7 @@ function Article({ articles = [], errorMes = '' }) {
 
     useEffect(() => {
         populateBooks();
-    }, [])
+    }, [bookmarked])
 
     let contents = !bookmarkLoaded ? (
         <>Loading</> 
@@ -20,6 +21,7 @@ function Article({ articles = [], errorMes = '' }) {
             <article key={article.url}>
                 <h2>{article.title}</h2>
                 <img src={article.urlToImage || ''} alt={article.title} />
+                <a href={article.url}>{article.url}</a>
                 <p>{article.description}</p>
 
                 <Button article={article} bookmarked={bookmarked} />

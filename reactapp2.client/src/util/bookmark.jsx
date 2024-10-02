@@ -1,4 +1,6 @@
-const uri = 'api/bookmarkitems';
+
+
+const uri = '/api/bookmarkitems';
 
 export async function getBookmarks() { 
     try {

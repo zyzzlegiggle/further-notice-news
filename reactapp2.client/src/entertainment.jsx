@@ -1,16 +1,12 @@
-import { useState, useEffect } from 'react';
-import Article from './article';
-import { fetchNews } from './util/news';
+import { useState, useEffect } from "react";
+import { fetchNews } from "./util/news";
+import Article from "./article";
 
-
-function Home() {
+function Entertainment() {
     const [articles, setArticles] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const date = new Date();
-    console.log(date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate());
-
-    const url = "https://newsapi.org/v2/top-headlines?category=general";
+    const url = "https://newsapi.org/v2/top-headlines?category=entertainment";
 
     useEffect(() => {
         const getData = async () => {
@@ -27,12 +23,11 @@ function Home() {
             {loading ? (
                 <p>Loading...</p>
             ) : (
-                    <Article articles={articles} errorMes={'articles'} />
+                <Article articles={articles} errorMes={'articles'} />
             )}
         </article>
     );
 
 }
 
-
-export default Home;
+export default Entertainment;

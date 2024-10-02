@@ -5,7 +5,13 @@ import { getBookmarks } from "./util/bookmark";
 function Favorites() {
     const [bookmarks, setBookmarks] = useState([]);
     const [loading, setLoading] = useState(true);
+
     useEffect(() => {
+        const populateBookmarks = async () => {
+            const data = await getBookmarks();
+            setBookmarks(data);
+            setLoading(false); 
+        }
         populateBookmarks();
     }, []);
 
@@ -18,12 +24,6 @@ function Favorites() {
             )}
         </article>
     );
-
-    async function populateBookmarks() {
-        const data = await getBookmarks();
-        setBookmarks(data);
-        setLoading(false); 
-    }
 }
 
 

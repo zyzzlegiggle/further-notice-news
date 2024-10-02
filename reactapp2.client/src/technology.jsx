@@ -3,14 +3,11 @@ import Article from './article';
 import { fetchNews } from './util/news';
 
 
-function Home() {
+function Technology() {
     const [articles, setArticles] = useState([]);
     const [loading, setLoading] = useState(true);
 
-    const date = new Date();
-    console.log(date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate());
-
-    const url = "https://newsapi.org/v2/top-headlines?category=general";
+    const url = "https://newsapi.org/v2/top-headlines?category=technology";
 
     useEffect(() => {
         const getData = async () => {
@@ -27,7 +24,7 @@ function Home() {
             {loading ? (
                 <p>Loading...</p>
             ) : (
-                    <Article articles={articles} errorMes={'articles'} />
+                <Article articles={articles} errorMes={'articles'} />
             )}
         </article>
     );
@@ -35,4 +32,4 @@ function Home() {
 }
 
 
-export default Home;
+export default Technology;
