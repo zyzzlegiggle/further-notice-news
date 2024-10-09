@@ -14,12 +14,25 @@ export async function fetchNews(url) {
             throw new Error(`Response status: ${response.status}`);
         }
 
-        const data = await response.json();
-        const filtered = data.articles.filter((article) =>
-            (article.urlToImage !== null || article.url !== null)
+        let data = await response.json();
+
+        // filtering 
+
+        data = data.articles.filter((article) =>
+            (article.url !== null)
         );
 
-        return filtered;
+        data = data.filter((article) =>
+            (article.title !== "[Removed]")
+        );
+
+        data = data.filter((article) =>
+            (article.title !== null)
+        );
+
+        console.log(data);
+
+        return data;
     } catch (error) {
         console.error(error.message);
         return [];

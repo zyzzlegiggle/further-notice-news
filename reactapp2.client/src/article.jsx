@@ -3,38 +3,64 @@ import { addBookmark, deleteBookmark, getBookmarks } from "./util/bookmark";
 import { useFetcher, Form } from "react-router-dom";
 
 
-function Article({ articles, errorMes}) {
+function Article({ articles, errorMes }) {
     const [bookmarked, setBookmarked] = useState([]);
     const [bookmarkLoaded, setBookmarkLoaded] = useState(false);
+    const [articleRows, setArticleRows] = useState([])
 
-    const size = Object.keys(articles).length;
+    if (Object.keys(articles).length === 0) {
+        return <p>No {errorMes}</p>;
+    }
 
     useEffect(() => {
         populateBooks();
     }, [bookmarked])
 
-    let contents = !bookmarkLoaded ? (
-        <>Loading</> 
-    ) : (
+    useEffect(() => {
+        let rows = [];
+
+        for (let i = 0; i < Object.keys(articles).length; i++) {
+            const contents = (
+                <article key={i} className="grid grid-rows-3 grid-flow-col gap-4">
+                    <div className="row-span-3" >
+                        <h1 className="text-xl">{articles[i]["title"]}</h1>
+                        <img className="object-cover h-48 w-96" src={articles[i]["urlToImage"] || ''} alt={articles[0]["title"]} />
+                        <p className="text-justify">{articles[i]["description"]}</p>
+                        <Button article={articles[i]} bookmarked={bookmarked} />
+                    </div>
+                    {i + 1 < Object.keys(articles).length && (
+                        <div className="col-span-2" >
+                            <h1 className="text-xl">{articles[i + 1]["title"]}</h1>
+                            <img className="object-cover h-48 w-96" src={articles[i + 1]["urlToImage"] || ''} alt={articles[i + 1]["title"]} />
+                            <p className="text-justify">{articles[i + 1]["description"]}</p>
+                            <Button article={articles[i + 1]} bookmarked={bookmarked} />
+                        </div>
+                    ) }
+                    {i + 2 < Object.keys(articles).length && (
+                        <div className="row-span-2 col-span-2" >
+                            <h1 className="text-xl">{articles[i + 2]["title"]}</h1>
+                            <img className="object-cover h-48 w-96" src={articles[i + 2]["urlToImage"] || ''} alt={articles[i + 2]["title"]} />
+                            <p className="text-justify">{articles[i + 2]["description"]}</p>
+                            <Button article={articles[i + 2]} bookmarked={bookmarked} />
+                        </div>
+                    )}
+                </article>
+            )
+            rows.push(contents);
+            i += 2;
+        }
+        setArticleRows(rows);
+    }, [])
+
+    return (
         <>
-        {articles.map((article) => (
-            <article key={article.url}>
-                <h2>{article.title}</h2>
-                <img src={article.urlToImage || ''} alt={article.title} />
-                <a href={article.url}>{article.url}</a>
-                <p>{article.description}</p>
-
-                <Button article={article} bookmarked={bookmarked} />
-            </article>
-        ))}
+            {!bookmarkLoaded ? (<p>Loading</p>) : (
+                <>
+                    {articleRows}
+                </>
+            )}
         </>
-    )
-
-    if (size === 0) {
-        return <p>No {errorMes}</p>;
-    } else {
-        return contents;
-    }
+    );
 
     async function populateBooks() {
         const data = await getBookmarks();

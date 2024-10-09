@@ -8,7 +8,6 @@ function Home() {
     const [loading, setLoading] = useState(true);
 
     const date = new Date();
-    console.log(date.getFullYear() + "-" + date.getMonth() + "-" + date.getDate());
 
     const url = "https://newsapi.org/v2/top-headlines?category=general";
 
