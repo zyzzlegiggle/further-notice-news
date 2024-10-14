@@ -9,7 +9,7 @@
     <PublishAssetsDirectory>$(MSBuildProjectDirectory)\dist</PublishAssetsDirectory>
   </PropertyGroup>
   <ItemGroup>
-    <Folder Include="NewFolder\" />
+    <Folder Include="src\NewFolder\" />
     <Folder Include="src\util\" />
   </ItemGroup>
   <ItemGroup>
@@ -20,5 +20,17 @@
   </ItemGroup>
   <ItemGroup>
     <None Remove="src\App.css" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptConfiguration Remove="NewFolder\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="NewFolder\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="src\business - Copy.jsx" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="src\index.css" />
   </ItemGroup>
 </Project>

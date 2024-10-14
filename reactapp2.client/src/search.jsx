@@ -1,16 +1,11 @@
-import { useEffect, useState } from "react";
 import { Form, useLoaderData } from "react-router-dom";
-import Article from "./article";
-import { fetchNews } from "./util/news";
+import News from "./skeletons/news";
 
 export async function loader({ params }) {
     const query = params.query
     return { query };
 }
 function Search() { 
-    const [articles, setArticles] = useState([]);
-    const [loading, setLoading] = useState(true);
-
     const query = useLoaderData()["query"];
 
     // today's date
@@ -23,23 +18,8 @@ function Search() {
     
     const url = `https://newsapi.org/v2/everything?q=${query}&sortBy=relevancy&from=${datePrevious}&to=${dateToday}&language=en`;
 
-    useEffect(() => {
-        const getData = async () => {
-            const response = await fetchNews(url);
-            setArticles(response);
-            setLoading(false);
-        }
-        getData();
-    }, [query]);
-
     return (
-        <>
-            {loading ? (
-                <p>Loading...</p>
-            ) : (
-                <Article articles={articles} errorMes={"articles"} />
-            )}
-        </>
+        <News url={url}/>
     );
 }
 

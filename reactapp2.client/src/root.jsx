@@ -43,7 +43,7 @@ function Root() {
                     </li>
 
                     {/* Search bar here */}
-                    <li className="inline-block min-h-full pl-72">
+                    <li className="inline-block min-h-full pl-48">
                         <Form method="post">
                             <label id="site-search">Search News: </label>
                             <input

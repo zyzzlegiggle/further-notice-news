@@ -3,13 +3,13 @@ import { addBookmark, deleteBookmark, getBookmarks } from "./util/bookmark";
 import { useFetcher, Form } from "react-router-dom";
 
 
-function Article({ articles, errorMes }) {
+function Article({ articles }) {
     const [bookmarked, setBookmarked] = useState([]);
     const [bookmarkLoaded, setBookmarkLoaded] = useState(false);
     const [articleRows, setArticleRows] = useState([])
 
     if (Object.keys(articles).length === 0) {
-        return <p>No {errorMes}</p>;
+        return <p>No articles</p>;
     }
 
     useEffect(() => {
@@ -21,32 +21,76 @@ function Article({ articles, errorMes }) {
 
         for (let i = 0; i < Object.keys(articles).length; i++) {
             const contents = (
-                <article key={i} className="grid grid-rows-3 grid-flow-col gap-4">
-                    <div className="row-span-3" >
-                        <h1 className="text-xl">{articles[i]["title"]}</h1>
-                        <img className="object-cover h-48 w-96" src={articles[i]["urlToImage"] || ''} alt={articles[0]["title"]} />
+                <section key={i} className="grid grid-rows-3 grid-cols-2 gap-8 border-b mb-8 pb-8">
+                    <article className="row-span-3 col-span-1" >
+                        <h1 className="text-3xl">{articles[i]["title"]}</h1>
                         <p className="text-justify">{articles[i]["description"]}</p>
+                        <img className="h-96 w-full" src={articles[i]["urlToImage"] || ''} alt={articles[0]["title"]} />
+                        
                         <Button article={articles[i]} bookmarked={bookmarked} />
-                    </div>
+                    </article>
                     {i + 1 < Object.keys(articles).length && (
-                        <div className="col-span-2" >
-                            <h1 className="text-xl">{articles[i + 1]["title"]}</h1>
-                            <img className="object-cover h-48 w-96" src={articles[i + 1]["urlToImage"] || ''} alt={articles[i + 1]["title"]} />
-                            <p className="text-justify">{articles[i + 1]["description"]}</p>
-                            <Button article={articles[i + 1]} bookmarked={bookmarked} />
-                        </div>
+                        <>
+                            <article className="row-span-1 col-span-1 border-b" >
+                                <h1 className="text-xl">{articles[i + 1]["title"]}</h1>
+                                <p className="text-justify">{articles[i + 1]["description"]}</p>
+                                <Button article={articles[i + 1]} bookmarked={bookmarked} />
+                            </article>
+                        </>
+                            
                     ) }
                     {i + 2 < Object.keys(articles).length && (
-                        <div className="row-span-2 col-span-2" >
-                            <h1 className="text-xl">{articles[i + 2]["title"]}</h1>
-                            <img className="object-cover h-48 w-96" src={articles[i + 2]["urlToImage"] || ''} alt={articles[i + 2]["title"]} />
-                            <p className="text-justify">{articles[i + 2]["description"]}</p>
-                            <Button article={articles[i + 2]} bookmarked={bookmarked} />
-                        </div>
+                       <>
+                            <article className="row-span-1 col-span-1 border-b" >
+                                <h1 className="text-xl">{articles[i + 2]["title"]}</h1>
+                                <p className="text-justify">{articles[i + 2]["description"]}</p>
+                                <Button article={articles[i + 2]} bookmarked={bookmarked} />
+                            </article>
+                            <div className="row-span-1"></div>
+                       </>
                     )}
-                </article>
+                </section>
             )
-            rows.push(contents);
+            const contents2 = (
+                <>
+                    <h1 className="text-3xl">{articles[i]["title"]}</h1>
+                    <p className="text-justify">{articles[i]["description"]}</p>
+                    <section className="flex flex-row pt-8">
+                        <div className="basis-1/6"></div>
+                        <article className="basis-4/6">
+                            <img className="h-128 w-full place-items-center " src={articles[i]["urlToImage"] || ''} alt={articles[0]["title"]} />
+
+                            <Button article={articles[i]} bookmarked={bookmarked} />
+                        </article>
+                        <div className="basis-1/6"></div>
+
+                    </section> 
+                    <section key={i} className="grid grid-cols-3 gap-8 border-b mb-8 pb-8 pt-8">
+                    
+                        {i + 1 < Object.keys(articles).length && (
+                            <>
+                                <article className="col-span-1 px-4" >
+                                    <h1 className="text-xl">{articles[i + 1]["title"]}</h1>
+                                    <p className="text-justify">{articles[i + 1]["description"]}</p>
+                                    <Button article={articles[i + 1]} bookmarked={bookmarked} />
+                                </article>
+                            </>
+
+                        )}
+                        {i + 2 < Object.keys(articles).length && (
+                            <>
+                                <article className="col-span-1 border-x px-4" >
+                                    <h1 className="text-xl">{articles[i + 2]["title"]}</h1>
+                                    <p className="text-justify">{articles[i + 2]["description"]}</p>
+                                    <Button article={articles[i + 2]} bookmarked={bookmarked} />
+                                </article>
+                                <div className="col-span-1"></div>
+                            </>
+                        )}
+                    </section>
+                </>
+            )
+            rows.push(contents2);
             i += 2;
         }
         setArticleRows(rows);
