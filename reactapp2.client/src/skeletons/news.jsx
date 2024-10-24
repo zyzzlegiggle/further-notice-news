@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import Article from '../article';
 import { fetchNews } from '../util/news';
+import Article from './article';
 
 
 function News(url) {
@@ -22,7 +22,7 @@ function News(url) {
             {loading ? (
                 <p>Loading...</p>
             ) : (
-                <div className="container mx-auto p-8">
+                <div className="container mx-auto py-8 px-16">
                     <Article articles={articles}/>
                 </div>
             )}

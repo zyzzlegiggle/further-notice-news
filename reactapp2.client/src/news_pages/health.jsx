@@ -1,7 +1,4 @@
-import { useState, useEffect } from 'react';
-import Article from './article';
-import { fetchNews } from './util/news';
-import News from './skeletons/news';
+import News from '../skeletons/news';
 
 
 function Health() {

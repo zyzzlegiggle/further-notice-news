@@ -1,4 +1,4 @@
-import News from './skeletons/news';
+import News from '../skeletons/news';
 
 
 function Business() {
