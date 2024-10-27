@@ -12,21 +12,20 @@ function News(url) {
             const response = await fetchNews(url["url"]);
             setArticles(response);
             setLoading(false);
+            console.log(articles);
         }
 
         getData();
     }, []);
 
     return (
-        <article>
+        <section className="container mx-auto py-8 px-16">
             {loading ? (
                 <p>Loading...</p>
             ) : (
-                <div className="container mx-auto py-8 px-16">
-                    <Article articles={articles}/>
-                </div>
+                 <Article articles={articles}/>                
             )}
-        </article>
+        </section>
     );
 
 }

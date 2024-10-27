@@ -10,6 +10,7 @@ export async function fetchNews(url) {
     try {
         url = url + `&apiKey=${key}`;
         const response = await fetch(url);
+
         if (!response.ok) {
             throw new Error(`Response status: ${response.status}`);
         }
@@ -30,11 +31,8 @@ export async function fetchNews(url) {
             (article.title !== null)
         );
 
-        console.log(data);
-
         return data;
     } catch (error) {
         console.error(error.message);
-        return [];
     }
 }
