@@ -11,6 +11,10 @@ builder.Services.AddDbContext<BookmarkDb>(opt =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// logging
+builder.Logging.ClearProviders();
+builder.Logging.AddConsole();
+
 var app = builder.Build();
 
 app.UseDefaultFiles();

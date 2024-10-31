@@ -14,7 +14,7 @@ namespace ReactApp2.Server.Controllers
     public class BookmarkItemsController : ControllerBase
     {
         private readonly BookmarkDb _context;
-
+        private readonly ILogger _logger;
         public BookmarkItemsController(BookmarkDb context)
         {
             _context = context;
@@ -94,7 +94,8 @@ namespace ReactApp2.Server.Controllers
                 }
             }
 
-            return CreatedAtAction(nameof(GetBookmarkItem), new { url = bookmarkItem.Url }, bookmarkItem);
+            return CreatedAtAction(nameof(GetBookmarkItem), new { url = bookmarkItem.Url, 
+                 }, bookmarkItem);
         }
 
         // DELETE: api/BookmarkItems/

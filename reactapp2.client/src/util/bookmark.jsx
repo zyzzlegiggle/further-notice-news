@@ -21,10 +21,12 @@ export async function addBookmark(article) {
     const data = {
         url: article.url,
         title: article.title,
-        author: article.author,
+        source: article.source,
         urlToImage: article.urlToImage,
-        description: article.description
+        description: article.description,
+        publishedAt: article.publishedAt,
     };
+    
 
     try {
         await fetch(uri,

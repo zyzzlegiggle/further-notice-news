@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { addBookmark, deleteBookmark, getBookmarks } from "../util/bookmark";
 import { getRandomInt } from "../util/util";
 import defaultImage from "../assets/error_img.jpg";
-
+import ArticleMenu from "./article-menu";
 function Article({ articles }) {
     const [bookmarked, setBookmarked] = useState([]);
     const [articleRows, setArticleRows] = useState([]);
@@ -15,6 +15,7 @@ function Article({ articles }) {
             const data = await getBookmarks();
             setBookmarked(data);
             setIsLoaded(true);
+            console.log(articles);
         }
 
         fetchBookmarks();
@@ -26,65 +27,70 @@ function Article({ articles }) {
         let i = 0;
         while (i < Object.keys(articles).length) {
             const template = (
-                <section className="grid grid-rows-2 grid-cols-3 gap-8 border-b mb-8 pb-8">
-                    <a key={articles[i]["url"]} href={articles[i]["url"]} className="row-span-2 col-span-2">
-                        <article>
+                <section className="flex flex-row gap-8 border-b mb-8 pb-8">
+                    <article className="basis-2/3">
+                        <a href={articles[i]["url"]}>
                             <h1 className="text-3xl font-bold">
                                 {articles[i]["title"]}
                             </h1>
-                            <ArticleMenu article={articles[i]} bookmarked={bookmarked} />
-                            <p className="text-justify">
-                                {articles[i]["description"]}
-                            </p>
+                        </a>
+                        <ArticleMenu article={articles[i]} bookmarked={bookmarked} />
+                        <p className="text-justify pt-2">
+                            {articles[i]["description"]}
+                        </p>
+                        <a href={articles[i]["url"]}>
                             <img
-                                className="h-128 w-full mx-auto rounded"
+                                className="h-128 w-full mx-auto rounded pt-4"
                                 src={articles[i]["urlToImage"] || ''}
                                 alt="image not found"
-                                onError={( currentImg ) => {
+                                onError={(currentImg) => {
                                     currentImg.onerror = null; // prevent looping
                                     currentImg.src = defaultImage;
 
                                 }}
                             />
-                        </article>
-                    </a>
-                    {(() => {
-                        const sideArticles = [];
-                        for (let j = 1; j <= 2; j++) {
-                            if (articles[i + j]) {
-                                sideArticles.push(
-                                    <SideArticle article={articles[i + j]} bookmarked={bookmarked} classes="row-span-1 col-span-1 border-b" />             
-                                );
-                            } else {
-                                break;
+                        </a>
+                    </article>
+                    
+                    <div className="flex flex-col basis-1/3">
+                        {(() => {
+                            const sideArticles = [];
+                            for (let j = 1; j <= 2; j++) {
+                                if (articles[i + j]) {
+                                    sideArticles.push(
+                                        <SideArticle article={articles[i + j]} bookmarked={bookmarked} classes="pb-4 pt-4 border-b" />
+                                    );
+                                } else {
+                                    break;
+                                }
                             }
-                        }
-                        return sideArticles;
-                    })()}
-
+                            return sideArticles;
+                        })()}
+                    </div>
+                   
 
                 </section>
             );
 
             const template2 = (
                 <section>
-                    <a href={articles[i]["url"]}>
-                        <article>
+                    
+                    <article>
+                        <a href={articles[i]["url"]}>
                             <h1 className="text-3xl font-bold">
                                 {articles[i]["title"]}
                             </h1>
-                            <span><ArticleMenu article={articles[i]} bookmarked={bookmarked} /></span>
-                            <p className="text-justify ">{articles[i]["description"]}</p>
-                            <div className="flex flex-row pt-8">
-                                <div className="basis-1/6"></div>
-                                <article className="basis-4/6">
-                                    <img className="rounded h-128 w-full place-items-center " src={articles[i]["urlToImage"] || ''} alt={articles[0]["title"]} />
-                                </article>
-                                <div className="basis-1/6"></div>
-                            </div>
-                        </article>
-                    </a>
-
+                        </a>
+                        <span><ArticleMenu article={articles[i]} bookmarked={bookmarked} /></span>
+                        <p className="text-justify pt-2">{articles[i]["description"]}</p>
+                        <div className="flex flex-row pt-8">
+                            <div className="basis-1/6"></div>
+                            <a href={articles[i]["url"]} className="basis-4/6">
+                                <img className="rounded h-128 w-full place-items-center " src={articles[i]["urlToImage"] || ''} alt={articles[0]["title"]} />
+                            </a>
+                            <div className="basis-1/6"></div>
+                        </div>
+                    </article>
                     <section className="grid grid-cols-3 gap-8 border-b mb-8 pb-8 pt-8">
                         {(() => {
                             const sideArticles = [];
@@ -124,51 +130,17 @@ function Article({ articles }) {
     )
 
 }
-
-function ArticleMenu({ article, bookmarked }) {
-    const [bookmarkActive, setBookmarkActive] = useState(false); // true means can bookmark, false mean already bookmarked
-
-    useEffect(() => {
-        if (bookmarked.length) {
-            const found = bookmarked.some(bookmark => bookmark.url === article.url);
-            setBookmarkActive(found);
-        }
-    }, [bookmarked, article]);
-
-    const handleClick = async () => {
-        if (!bookmarkActive) {
-            await addBookmark(article);
-        } else {
-            await deleteBookmark(article);
-        }
-        setBookmarkActive(prev => !prev);
-    };
-
-    const menuClasses = "inline-block pr-4"
-    return (
-        <ul>
-            <li className={menuClasses} ><p>{article["source"]["name"]}</p></li>
-            <li className={menuClasses}><p>{article["publishedAt"].split("T")[0]}</p></li>
-            <li className={menuClasses}><i onClick={handleClick} className={`${bookmarkActive ? "fa-solid" : "fa-regular"} fa-bookmark cursor-pointer`}></i></li>
-            <li className={menuClasses}><i className="fa-solid fa-share cursor-pointer"></i></li>
-        </ul>
-        
-    );
-}
-
 function SideArticle({ article, bookmarked, classes="" }) {
     return (
-        <a key={article["url"]} href={article["url"]} className={classes} >
-            <article>
+        <article className={classes}>
+            <a href={article["url"]} >
                 <h1 className="text-xl font-semibold">
                     {article["title"]}
                 </h1>
-                <span>
-                    <ArticleMenu article={article} bookmarked={bookmarked} />
-                </span>
-                <p>{article["description"]}</p>
-            </article>
-        </a>
+            </a>
+            <ArticleMenu article={article} bookmarked={bookmarked} />
+            <p className="pt-2">{article["description"]}</p>
+        </article>
     )
 }
 
