@@ -1,8 +1,8 @@
 import { useState, useEffect } from "react";
 import { addBookmark, deleteBookmark, getBookmarks } from "../util/bookmark";
 import { getRandomInt } from "../util/util";
-import defaultImage from "../assets/error_img.jpg";
 import ArticleMenu from "./article-menu";
+import errorImage from "../assets/error_img.png";
 function Article({ articles }) {
     const [bookmarked, setBookmarked] = useState([]);
     const [articleRows, setArticleRows] = useState([]);
@@ -42,11 +42,11 @@ function Article({ articles }) {
                             <img
                                 className="h-128 w-full mx-auto rounded pt-4"
                                 src={articles[i]["urlToImage"] || ''}
-                                alt="image not found"
-                                onError={(currentImg) => {
-                                    currentImg.onerror = null; // prevent looping
-                                    currentImg.src = defaultImage;
-
+                                alt={articles[i]["title"]}
+                                onError={(img) => {
+                                    img.onerror = null; // prevent looping
+                                    img.currentTarget.src = errorImage;
+                                    img.currentTarget.className = "h-128 w-full mx-auto rounded pt-4";
                                 }}
                             />
                         </a>
@@ -86,7 +86,17 @@ function Article({ articles }) {
                         <div className="flex flex-row pt-8">
                             <div className="basis-1/6"></div>
                             <a href={articles[i]["url"]} className="basis-4/6">
-                                <img className="rounded h-128 w-full place-items-center " src={articles[i]["urlToImage"] || ''} alt={articles[0]["title"]} />
+                                <img
+                                    className="rounded h-128 w-full place-items-center "
+                                    src={articles[i]["urlToImage"] || ''}
+                                    alt={articles[i]["title"]}
+                                    onError={(img) => {
+                                        img.onerror = null; // prevent looping
+                                        img.currentTarget.src = errorImage;
+                                        img.currentTarget.className = "rounded h-128 w-full place-items-center ";
+                                    }}
+
+                                />
                             </a>
                             <div className="basis-1/6"></div>
                         </div>

@@ -18,16 +18,7 @@ export async function getBookmarks() {
 }
 
 export async function addBookmark(article) {
-    const data = {
-        url: article.url,
-        title: article.title,
-        source: article.source,
-        urlToImage: article.urlToImage,
-        description: article.description,
-        publishedAt: article.publishedAt,
-    };
-    
-
+    const data = dataBody(article);
     try {
         await fetch(uri,
             {
@@ -46,13 +37,7 @@ export async function addBookmark(article) {
 }
 
 export async function deleteBookmark(article) {
-    const data = {
-        url: article.url,
-        title: article.title,
-        author: article.author,
-        urlToImage: article.urlToImage,
-        description: article.description
-    };
+    const data = dataBody(article)
     try {
         await fetch(uri,
             {
@@ -67,6 +52,17 @@ export async function deleteBookmark(article) {
     } catch (e) {
         console.error(e);
     }
+}
 
-    
+function dataBody(article) {
+    const data = {
+        url: article.url,
+        title: article.title,
+        source: article.source,
+        urlToImage: article.urlToImage,
+        description: article.description,
+        publishedAt: article.publishedAt,
+    };
+
+    return data;
 }

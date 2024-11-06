@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { getBookmarks } from "../util/bookmark";
+import ArticleMenu from "../skeletons/article-menu";
 
 function Favorites() {
     const [bookmarks, setBookmarks] = useState([]);
@@ -23,6 +24,7 @@ function Favorites() {
                 bookmarks.map((bookmark) => (
                     <article key={bookmark.url} className="border-b pb-8 mb-8">
                         <h1 className="text-3xl font-bold">{bookmark.title}</h1>
+                        <ArticleMenu article={bookmark} bookmarked={bookmarks} />
                         <p className="text-justify pt-2">{bookmark.description}</p>
                         <img
                             className="h-96 w-128 rounded pt-4 mx-auto"

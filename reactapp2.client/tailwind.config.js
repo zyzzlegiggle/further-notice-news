@@ -9,7 +9,10 @@ export default {
           spacing: {
               '128': '32rem',
               '176': '44rem',
-          }
+          },
+          colors: {
+              'canva': '#5271ff',
+          },
       },
   },
   plugins: [],

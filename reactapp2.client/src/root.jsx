@@ -13,50 +13,34 @@ export async function action({ request }) {
 
 function Root() {
 
+    const navClasses = "inline-block rounded p-2.5 hover:bg-[#5271ff] hover:text-white";
+
     return (
         <>
-            <nav className="border-b">
-                <ul>
-                    <li className="inline-block min-h-full p-2.5 border-r hover:bg-sky-400 hover:text-white">
-                        <Link to={"/"}>Home</Link>
-                    </li>
-                    <li className="inline-block min-h-full p-2.5 border-r hover:bg-sky-400 hover:text-white">
-                        <Link to={"/favorites"}>Favorites</Link>
-                    </li>
-                    <li className="inline-block min-h-full p-2.5 border-r hover:bg-sky-400 hover:text-white">
-                        <Link to={"/entertainment"}>Entertainment</Link>
-                    </li>
-                    <li className="inline-block min-h-full p-2.5 border-r hover:bg-sky-400 hover:text-white">
-                        <Link to={"/science"}>Science</Link>
-                    </li>
-                    <li className="inline-block min-h-full p-2.5 border-r hover:bg-sky-400 hover:text-white">
-                        <Link to={"/business"}>Business</Link>
-                    </li>
-                    <li className="inline-block min-h-full p-2.5 border-r hover:bg-sky-400 hover:text-white">
-                        <Link to={"/health"}>Health</Link>
-                    </li>
-                    <li className="inline-block min-h-full p-2.5 border-r hover:bg-sky-400 hover:text-white">
-                        <Link to={"/sports"}>Sports</Link>
-                    </li>
-                    <li className="inline-block min-h-full p-2.5 border-r hover:bg-sky-400 hover:text-white">
-                        <Link to={"/technology"}>Technology</Link>
-                    </li>
+            <nav className="container mx-auto px-16">
+                <img className="size-32 object-contain inline-block mr-10" src="src/assets/news_logo.png" alt="news logo"></img>
+                <Link to={"/"} className={navClasses}>Home</Link>
+                <Link to={"/favorites"} className={navClasses}>Favorites</Link>
+                <Link to={"/entertainment"} className={navClasses}>Entertainment</Link>
+                <Link to={"/science"} className={navClasses}>Science</Link>
+                <Link to={"/business"} className={navClasses}>Business</Link>
+                <Link to={"/health"} className={navClasses}>Health</Link>
+                <Link to={"/sports"} className={navClasses}>Sports</Link>
+                <Link to={"/technology"} className={navClasses}>Technology</Link>
+                
 
-                    {/* Search bar here */}
-                    <li className="inline-block min-h-full pl-48">
-                        <Form method="post">
-                            <label id="site-search">Search News: </label>
-                            <input
-                                type="search"
-                                id="site-search"
-                                name="search"
-                                className="border pl-2.5"
-                            />
-                            <button type="submit" className="ml-2 p-1.5 rounded-md hover:bg-sky-400 hover:text-white">Search</button>
-                        </Form>
-                    </li>
-
-                </ul>
+                {/* Search bar here */}
+                <li className="inline-block min-h-full pl-16">
+                    <Form method="post">
+                        <input
+                            type="search"
+                            id="site-search"
+                            name="search"
+                            className="border p-1"
+                        />
+                        <button type="submit" className="ml-2 p-2.5 rounded-md hover:bg-[#5271ff] hover:text-white">Search</button>
+                    </Form>
+                </li>
             </nav>
             <div id="detail">
                 <Outlet />

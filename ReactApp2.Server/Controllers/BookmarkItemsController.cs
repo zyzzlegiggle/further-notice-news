@@ -94,8 +94,7 @@ namespace ReactApp2.Server.Controllers
                 }
             }
 
-            return CreatedAtAction(nameof(GetBookmarkItem), new { url = bookmarkItem.Url, 
-                 }, bookmarkItem);
+            return CreatedAtAction(nameof(GetBookmarkItem), new { url = bookmarkItem.Url }, bookmarkItem);
         }
 
         // DELETE: api/BookmarkItems/

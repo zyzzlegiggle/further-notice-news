@@ -19,7 +19,7 @@ function News(url) {
     }, []);
 
     return (
-        <section className="container mx-auto py-8 px-16">
+        <section className="container mx-auto py-8 px-16 font-sans">
             {loading ? (
                 <p>Loading...</p>
             ) : (
