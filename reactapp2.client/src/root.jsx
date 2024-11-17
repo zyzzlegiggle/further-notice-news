@@ -27,10 +27,11 @@ function Root() {
                 <Link to={"/health"} className={navClasses}>Health</Link>
                 <Link to={"/sports"} className={navClasses}>Sports</Link>
                 <Link to={"/technology"} className={navClasses}>Technology</Link>
-                
+                <Link to={"/register"} className={navClasses}>Register</Link>
+                <Link to={"/login"} className={navClasses}>Login</Link>
 
                 {/* Search bar here */}
-                <li className="inline-block min-h-full pl-16">
+                <li className="inline-block min-h-full pl-12">
                     <Form method="post">
                         <input
                             type="search"

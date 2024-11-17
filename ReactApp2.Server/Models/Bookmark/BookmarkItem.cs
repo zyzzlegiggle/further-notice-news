@@ -20,6 +20,5 @@ namespace ReactApp2.Server
         public string? Description { get; set; }
         public string PublishedAt { get; set; }
 
-
     }
 }

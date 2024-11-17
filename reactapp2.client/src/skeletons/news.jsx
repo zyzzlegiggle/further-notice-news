@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { fetchNews } from '../util/news';
 import Article from './article';
+import Page from './page';
 
 
 function News(url) {
@@ -12,20 +13,29 @@ function News(url) {
             const response = await fetchNews(url["url"]);
             setArticles(response);
             setLoading(false);
-            console.log(articles);
         }
 
         getData();
     }, []);
 
+    useEffect(() => {
+
+    })
+
     return (
-        <section className="container mx-auto py-8 px-16 font-sans">
+        <>
             {loading ? (
-                <p>Loading...</p>
+                <Page>
+                    <p>Loading...</p>
+                </Page>
+
             ) : (
-                 <Article articles={articles}/>                
+                <Page>
+                    <Article articles={articles} />
+                </Page>
+
             )}
-        </section>
+        </>
     );
 
 }

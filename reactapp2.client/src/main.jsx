@@ -12,6 +12,8 @@ import Business from "./news_pages/business"
 import Health from "./news_pages/health"
 import Sports from "./news_pages/sports"
 import Technology from "./news_pages/technology"
+import Register from "./forms/register"
+import Login from "./forms/login"
 
 const router = createBrowserRouter([
     {
@@ -51,6 +53,14 @@ const router = createBrowserRouter([
             {
                 path: "technology",
                 element: <Technology />
+            },
+            {
+                path: "register",
+                element: <Register />
+            },
+            {
+                path: "Login",
+                element: <Login />
             },
             {
                 path: "search/:query",

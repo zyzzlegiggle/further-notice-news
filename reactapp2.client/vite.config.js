@@ -49,7 +49,24 @@ export default defineConfig({
             '^/api/*': {
                 target: 'https://localhost:7295/',
                 secure: false
+            },
+            '^/pingauth': {
+                target: 'https://localhost:7295/',
+                secure: false
+            },
+            '^/register': {
+                target: 'https://localhost:7295/',
+                secure: false
+            },
+            '^/login': {
+                target: 'https://localhost:7295/',
+                secure: false
+            },
+            '^/logout': {
+                target: 'https://localhost:7295/',
+                secure: false
             }
+            
         },
         port: 5173,
         https: {

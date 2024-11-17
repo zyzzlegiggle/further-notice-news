@@ -15,7 +15,6 @@ function Article({ articles }) {
             const data = await getBookmarks();
             setBookmarked(data);
             setIsLoaded(true);
-            console.log(articles);
         }
 
         fetchBookmarks();

@@ -8,9 +8,9 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-public class ApplicationDbContext : IdentityDbContext<UserItem>
+public class UserDbContext : IdentityDbContext<UserItem>
 {
-    public ApplicationDbContext(DbContextOptions options) : base(options) { }
+    public UserDbContext(DbContextOptions<UserDbContext> options) : base(options) { }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

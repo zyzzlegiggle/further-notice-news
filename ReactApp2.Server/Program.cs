@@ -1,8 +1,12 @@
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ReactApp2.Server;
 using ReactApp2.Server.Models;
 using ReactApp2.Server.Models.Users;
+using Microsoft.AspNetCore.OpenApi;
+using System.Security.Claims;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -13,23 +17,20 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // db contexts
-/*
-var BookmarkDbString = builder.Configuration.GetConnectionString("BookmarkDb") ?? throw new InvalidOperationException("No connection string BookmarkDb");
+var BookmarkDbContext = builder.Configuration.GetConnectionString("BookmarkDbContext") ?? throw new InvalidOperationException("No connection string BookmarkDb");
 builder.Services.AddDbContext<BookmarkDb>(opt =>
-    opt.UseSqlServer(BookmarkDbString));
+    opt.UseSqlServer(BookmarkDbContext));
 
-var UserDbString = builder.Configuration.GetConnectionString("UserDb") ?? throw new InvalidOperationException("No connection string UserDb");
-builder.Services.AddDefaultIdentity<UserItem>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<UserDbContext>();
+var UserDbContext = builder.Configuration.GetConnectionString("UserDbContext") ?? throw new InvalidOperationException("No connection string UserDbContext");
 builder.Services.AddDbContext<UserDbContext>(
-    options => options.UseSqlServer(UserDbString));
-*/
-var ApplicationDbContextConnection = builder.Configuration.GetConnectionString("ApplicationDbContextConnection") ?? throw new InvalidOperationException("No connection string ApplicationDbContextConnection");
-builder.Services.AddDbContext<ApplicationDbContext>(
-    options => options.UseInMemoryDatabase("ApplicationDbContextConnection"));
+    options => options.UseSqlServer(UserDbContext));
+
+builder.Services.AddDatabaseDeveloperPageExceptionFilter(); // to help debug in console for db
 
 // identity
+builder.Services.AddAuthorization();
 builder.Services.AddIdentityApiEndpoints<UserItem>()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+    .AddEntityFrameworkStores<UserDbContext>();
 
 // logging
 builder.Logging.ClearProviders();
@@ -39,6 +40,29 @@ var app = builder.Build();
 
 app.UseDefaultFiles();
 app.UseStaticFiles();
+app.MapIdentityApi<UserItem>();
+
+
+// for identity api
+app.MapPost("/logout", async (SignInManager<UserItem> signInManager) =>
+{
+
+    await signInManager.SignOutAsync();
+    return Results.Ok();
+
+})
+.WithOpenApi()
+.RequireAuthorization();
+
+app.MapGet("/pingauth", (ClaimsPrincipal user) =>
+{
+    var email = user.FindFirstValue(ClaimTypes.Email); // get the user's email from the claim
+    return Results.Json(new { Email = email }); ; // return the email as a plain text response
+})
+.WithOpenApi()
+.RequireAuthorization();
+
+app.MapPost("/InsertBookmark"), 
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -47,8 +71,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-// identity
-app.MapIdentityApi<UserItem>();
+
 
 app.UseHttpsRedirection();
 
