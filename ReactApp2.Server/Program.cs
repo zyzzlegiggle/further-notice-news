@@ -62,8 +62,6 @@ app.MapGet("/pingauth", (ClaimsPrincipal user) =>
 .WithOpenApi()
 .RequireAuthorization();
 
-app.MapPost("/InsertBookmark"), 
-
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {

@@ -5,5 +5,5 @@ namespace ReactApp2.Server.Models.Users;
 
 public class UserItem: IdentityUser
 {
-    public ICollection<Bookmark> Bookmarks { get; set; }
+
 }
