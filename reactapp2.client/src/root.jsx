@@ -5,6 +5,8 @@ import {
     redirect,
 } from "react-router-dom";
 
+import { useLocation } from 'react-router';
+
 export async function action({ request }) {
     const formData = await request.formData();
     const query = formData.get("search");
@@ -13,25 +15,34 @@ export async function action({ request }) {
 
 function Root() {
 
-    const navClasses = "inline-block rounded p-2.5 hover:bg-[#5271ff] hover:text-white";
+    const currentPath = useLocation().pathname;
+
+    const navClasses = (path) => `rounded mr-2 p-2.5 hover:bg-[#5271ff] hover:text-white ${currentPath === path ? "bg-[#5271ff] text-white" : ""}`;
+
+    const paths = [
+        { name: "Home", path: "/" },
+        { name: "Favorites", path: "/favorites" },
+        { name: "Entertainment", path: "/entertainment" },
+        { name: "Science", path: "/science" },
+        { name: "Business", path: "/business" },
+        { name: "Health", path: "/health" },
+        { name: "Sports", path: "/sports" },
+        { name: "Technology", path: "/technology" },
+    ]
 
     return (
         <>
-            <nav className="container mx-auto px-16">
+            <nav className="container mx-auto px-16 items-center flex flex-row">
                 <img className="size-32 object-contain inline-block mr-10" src="src/assets/news_logo.png" alt="news logo"></img>
-                <Link to={"/"} className={navClasses}>Home</Link>
-                <Link to={"/favorites"} className={navClasses}>Favorites</Link>
-                <Link to={"/entertainment"} className={navClasses}>Entertainment</Link>
-                <Link to={"/science"} className={navClasses}>Science</Link>
-                <Link to={"/business"} className={navClasses}>Business</Link>
-                <Link to={"/health"} className={navClasses}>Health</Link>
-                <Link to={"/sports"} className={navClasses}>Sports</Link>
-                <Link to={"/technology"} className={navClasses}>Technology</Link>
-                <Link to={"/register"} className={navClasses}>Register</Link>
-                <Link to={"/login"} className={navClasses}>Login</Link>
+
+                {paths.map(({ name, path }) => (
+                    <Link key={path} to={path} className={navClasses(path)}>
+                        {name}
+                    </Link>
+                ))}
 
                 {/* Search bar here */}
-                <li className="inline-block min-h-full pl-12">
+                <div className="min-h-full">
                     <Form method="post">
                         <input
                             type="search"
@@ -41,7 +52,7 @@ function Root() {
                         />
                         <button type="submit" className="ml-2 p-2.5 rounded-md hover:bg-[#5271ff] hover:text-white">Search</button>
                     </Form>
-                </li>
+                </div>
             </nav>
             <div id="detail">
                 <Outlet />
