@@ -61,6 +61,24 @@ function Login() {
             })
         }
     }
+
+    async function handleClick() {
+        try {
+            const res = await fetch("/pingauth", {
+                method: "GET",
+            });
+            if (res.status == 200) {
+                console.log("authorized");
+                let data = await res.json();
+                console.log(data);
+            }
+        } catch (e) {
+            console.error('error:' + e);
+        }
+        
+
+
+    }
     
     return (
         <Page addClass="flex flex-row">
@@ -121,6 +139,7 @@ function Login() {
                 </form>
             </section>
             <section className="basis-2/5"></section>
+            <button onClick={handleClick}>click me pingauth</button>
         </Page>
     );
 }
