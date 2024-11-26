@@ -68,8 +68,9 @@ function Register() {
             return () => clearTimeout(timer);
         }
     }, [processed])
+    console.log("register");
     return (
-        <Page>
+        <section className="container mx-auto py-8 px-16">
             
             <div className="flex flex-row" >
                 <section className="basis-2/5"></section>
@@ -153,7 +154,7 @@ function Register() {
                 </section>
                 <section className="basis-2/5"></section>
             </div>
-        </Page>
+        </section>
         
     );
 }

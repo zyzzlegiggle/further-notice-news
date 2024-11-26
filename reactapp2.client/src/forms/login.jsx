@@ -1,10 +1,13 @@
 import { useState } from "react";
 import Page from "../skeletons/page";
+import { useNavigate } from "react-router";
 
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [rememberme, setRememberMe] = useState(false);
+
+    let navigate = useNavigate();
 
     function handleChange(e) {
         const { name, value } = e.target;
@@ -53,7 +56,7 @@ function Login() {
             .then((res) => {
                 console.log(res);
                 if (res.ok) {
-                    console.log("login success");
+                    navigate("/");
                 }
             })
             .catch((error) => {
@@ -62,26 +65,9 @@ function Login() {
         }
     }
 
-    async function handleClick() {
-        try {
-            const res = await fetch("/pingauth", {
-                method: "GET",
-            });
-            if (res.status == 200) {
-                console.log("authorized");
-                let data = await res.json();
-                console.log(data);
-            }
-        } catch (e) {
-            console.error('error:' + e);
-        }
-        
-
-
-    }
     
     return (
-        <Page addClass="flex flex-row">
+        <section className="container mx-auto py-8 px-16 flex flex-row">
             <section className="basis-2/5"></section>
             <section className="border rounded-md basis-1/5 p-4">
                 <h1 className="text-3xl text-center font-semibold">Login</h1>
@@ -139,8 +125,7 @@ function Login() {
                 </form>
             </section>
             <section className="basis-2/5"></section>
-            <button onClick={handleClick}>click me pingauth</button>
-        </Page>
+        </section>
     );
 }
 

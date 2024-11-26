@@ -59,8 +59,8 @@ const router = createBrowserRouter([
                 element: <Register />
             },
             {
-                path: "Login",
-                element: <Login                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                               />
+                path: "login",
+                element: <Login />
             },
             {
                 path: "search/:query",

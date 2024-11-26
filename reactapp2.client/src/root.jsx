@@ -19,6 +19,7 @@ function Root() {
 
     const currentPath = useLocation().pathname;
 
+
     const navClasses = (path) => `transition duration-200 ease-in-out mr-2 rounded block py-2 px-3 text-gray-900 hover:bg-[#5271ff] hover:text-white ${currentPath === path ? "bg-[#5271ff] text-white" : ""}`;
 
     const paths = [
