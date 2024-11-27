@@ -68,7 +68,6 @@ function Register() {
             return () => clearTimeout(timer);
         }
     }, [processed])
-    console.log("register");
     return (
         <section className="container mx-auto py-8 px-16">
             

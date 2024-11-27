@@ -12,7 +12,7 @@ using ReactApp2.Server.Models.Users;
 namespace ReactApp2.Server.Migrations
 {
     [DbContext(typeof(UserDbContext))]
-    [Migration("20241124171940_db1")]
+    [Migration("20241127184917_db1")]
     partial class db1
     {
         /// <inheritdoc />
@@ -158,6 +158,46 @@ namespace ReactApp2.Server.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("ReactApp2.Server.Models.User.Bookmark", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Description")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("PublishedAt")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SourceJson")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UrlToImage")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserItemId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserItemId");
+
+                    b.ToTable("Bookmark", (string)null);
+                });
+
             modelBuilder.Entity("ReactApp2.Server.Models.Users.UserItem", b =>
                 {
                     b.Property<string>("Id")
@@ -272,6 +312,18 @@ namespace ReactApp2.Server.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("ReactApp2.Server.Models.User.Bookmark", b =>
+                {
+                    b.HasOne("ReactApp2.Server.Models.Users.UserItem", null)
+                        .WithMany("Bookmarks")
+                        .HasForeignKey("UserItemId");
+                });
+
+            modelBuilder.Entity("ReactApp2.Server.Models.Users.UserItem", b =>
+                {
+                    b.Navigation("Bookmarks");
                 });
 #pragma warning restore 612, 618
         }

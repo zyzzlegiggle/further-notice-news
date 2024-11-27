@@ -156,6 +156,30 @@ namespace ReactApp2.Server.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Bookmark",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Url = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    SourceJson = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UrlToImage = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    PublishedAt = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UserItemId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Bookmark", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Bookmark_AspNetUsers_UserItemId",
+                        column: x => x.UserItemId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id");
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
                 table: "AspNetRoleClaims",
@@ -194,6 +218,11 @@ namespace ReactApp2.Server.Migrations
                 column: "NormalizedUserName",
                 unique: true,
                 filter: "[NormalizedUserName] IS NOT NULL");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Bookmark_UserItemId",
+                table: "Bookmark",
+                column: "UserItemId");
         }
 
         /// <inheritdoc />
@@ -213,6 +242,9 @@ namespace ReactApp2.Server.Migrations
 
             migrationBuilder.DropTable(
                 name: "AspNetUserTokens");
+
+            migrationBuilder.DropTable(
+                name: "Bookmark");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

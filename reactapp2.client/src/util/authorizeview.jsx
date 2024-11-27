@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useContext, useEffect } from "react";
 import { createContext, useState } from "react";
 import { useNavigate } from "react-router";
 
@@ -75,7 +75,15 @@ export function AuthorizeView(props) {
             </>
         )
     }
-    
+}
 
-    
+export function GetUser(props) {
+    // get email from context
+    const user = useContext(userContext);
+
+    if (props.value == "email") {
+        return <>{user.email}</>
+    } else {
+        return <></>
+    }
 }

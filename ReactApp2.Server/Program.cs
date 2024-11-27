@@ -6,6 +6,8 @@ using ReactApp2.Server.Models;
 using ReactApp2.Server.Models.Users;
 using Microsoft.AspNetCore.OpenApi;
 using System.Security.Claims;
+using ReactApp2.Server.Models.User;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,9 +19,6 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // db contexts
-var BookmarkDbContext = builder.Configuration.GetConnectionString("BookmarkDbContext") ?? throw new InvalidOperationException("No connection string BookmarkDb");
-builder.Services.AddDbContext<BookmarkDb>(opt =>
-    opt.UseSqlServer(BookmarkDbContext));
 
 var UserDbContext = builder.Configuration.GetConnectionString("UserDbContext") ?? throw new InvalidOperationException("No connection string UserDbContext");
 builder.Services.AddDbContext<UserDbContext>(
@@ -43,7 +42,7 @@ app.UseStaticFiles();
 app.MapIdentityApi<UserItem>();
 
 
-// for identity api
+// for endpoints
 app.MapPost("/logout", async (SignInManager<UserItem> signInManager) =>
 {
 
@@ -61,6 +60,36 @@ app.MapGet("/pingauth", (ClaimsPrincipal user) =>
 })
 .WithOpenApi()
 .RequireAuthorization();
+
+app.MapPost("/api/bookmarkitems", async (Bookmark bookmark, UserManager<UserItem> userManager, UserDbContext db, HttpContext httpContext) =>
+{
+
+    if (bookmark == null)
+    {
+        return Results.BadRequest("Bookmark is required");
+    }
+
+    // get currently signed in user
+    var user = await userManager.GetUserAsync(httpContext.User);
+    if (user == null)
+    {
+        return Results.Unauthorized();
+    }
+
+    try
+    {
+        user.Bookmarks ??= new List<Bookmark>();
+        user.Bookmarks.Add(bookmark);
+
+        await db.SaveChangesAsync();
+        return Results.Created($"/api/bookmarkitems/{bookmark.Url}", bookmark);
+    }
+    catch (Exception ex)
+    {
+        return Results.BadRequest(ex.Message);
+    }
+   
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
