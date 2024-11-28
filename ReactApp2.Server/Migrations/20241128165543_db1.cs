@@ -168,7 +168,7 @@ namespace ReactApp2.Server.Migrations
                     UrlToImage = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     PublishedAt = table.Column<string>(type: "nvarchar(max)", nullable: false),
-                    UserItemId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    UserItemId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -177,7 +177,8 @@ namespace ReactApp2.Server.Migrations
                         name: "FK_Bookmark_AspNetUsers_UserItemId",
                         column: x => x.UserItemId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateIndex(

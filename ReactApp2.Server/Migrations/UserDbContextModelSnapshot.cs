@@ -186,6 +186,7 @@ namespace ReactApp2.Server.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserItemId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
@@ -313,9 +314,13 @@ namespace ReactApp2.Server.Migrations
 
             modelBuilder.Entity("ReactApp2.Server.Models.User.Bookmark", b =>
                 {
-                    b.HasOne("ReactApp2.Server.Models.Users.UserItem", null)
+                    b.HasOne("ReactApp2.Server.Models.Users.UserItem", "UserItem")
                         .WithMany("Bookmarks")
-                        .HasForeignKey("UserItemId");
+                        .HasForeignKey("UserItemId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("UserItem");
                 });
 
             modelBuilder.Entity("ReactApp2.Server.Models.Users.UserItem", b =>

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.OpenApi;
 using System.Security.Claims;
 using ReactApp2.Server.Models.User;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Http;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -61,7 +62,7 @@ app.MapGet("/pingauth", (ClaimsPrincipal user) =>
 .WithOpenApi()
 .RequireAuthorization();
 
-app.MapPost("/api/bookmarkitems", async (Bookmark bookmark, UserManager<UserItem> userManager, UserDbContext db, HttpContext httpContext) =>
+app.MapPost("/api/bookmark/insert", async (Bookmark bookmark, UserManager<UserItem> userManager, UserDbContext db, HttpContext httpContext) =>
 {
 
     if (bookmark == null)
@@ -79,16 +80,51 @@ app.MapPost("/api/bookmarkitems", async (Bookmark bookmark, UserManager<UserItem
     try
     {
         user.Bookmarks ??= new List<Bookmark>();
-        user.Bookmarks.Add(bookmark);
+        bookmark.UserItem = user;
+        db.Bookmarks.Add(bookmark);
 
         await db.SaveChangesAsync();
         return Results.Created($"/api/bookmarkitems/{bookmark.Url}", bookmark);
     }
     catch (Exception ex)
     {
-        return Results.BadRequest(ex.Message);
+        return Results.BadRequest($"Error occurred: {ex.Message}");
     }
    
+});
+
+app.MapPost("/api/bookmark/delete", async (Bookmark bookmark, UserManager<UserItem> userManager, UserDbContext db, HttpContext httpContext) =>
+{
+    if (bookmark == null || string.IsNullOrEmpty(bookmark.Url))
+    {
+        return Results.BadRequest("Url must not be empty");
+    }
+
+    var user = await userManager.GetUserAsync(httpContext.User);
+    if (user == null)
+    {
+        return Results.Unauthorized();
+    }
+
+    try
+    {
+        var dataBookmark = await db.Bookmarks
+            .FirstOrDefaultAsync(b => b.Url == bookmark.Url && b.UserItem.Id == user.Id);
+
+        if (dataBookmark == null)
+        {
+            return Results.NotFound("bookmark not found");
+        }
+
+        db.Bookmarks.Remove(dataBookmark);
+        await db.SaveChangesAsync();
+
+        return Results.Ok("Bookmark has been deleted");
+    }
+    catch (Exception ex)
+    {
+        return Results.BadRequest($"Error occurred: {ex.Message}");
+    }
 });
 
 // Configure the HTTP request pipeline.

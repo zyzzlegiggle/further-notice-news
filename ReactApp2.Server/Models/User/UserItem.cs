@@ -6,5 +6,5 @@ namespace ReactApp2.Server.Models.Users;
 public class UserItem: IdentityUser
 {
     // additional  stuffs
-    public ICollection<Bookmark>? Bookmarks { get; set; }
+    public ICollection<Bookmark> Bookmarks { get; set; } = new List<Bookmark>();
 }

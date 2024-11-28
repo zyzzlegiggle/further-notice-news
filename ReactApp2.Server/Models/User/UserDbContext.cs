@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using ReactApp2.Server.Models.User;
+using System.Text.Json;
 
 public class UserDbContext : IdentityDbContext<UserItem>
 {
@@ -17,8 +18,16 @@ public class UserDbContext : IdentityDbContext<UserItem>
     public DbSet<Bookmark> Bookmarks { get; set; }  
 
     protected override void OnModelCreating(ModelBuilder builder)
-    {
+    { 
         base.OnModelCreating(builder);
         builder.Entity<Bookmark>().ToTable("Bookmark");
+        builder.Entity<Bookmark>(entity =>
+        {
+            entity.ToTable("Bookmark");
+            entity.HasOne(e => e.UserItem)
+            .WithMany(u => u.Bookmarks)
+            .HasForeignKey(e => e.UserItemId)
+            .OnDelete(DeleteBehavior.Cascade);
+        });
     }
 }

@@ -1,11 +1,11 @@
 
 
-const uri = '/api/bookmarkitems';
+const apiUrl = '/api/bookmark';
 
 export async function getBookmarks() { 
     try {
-
-        const response = await fetch(uri);
+        const url = apiUrl + "/get";
+        const response = await fetch(url);
         if (!response.ok) {
             throw new Error(`Status : ${response.status}`);
         }
@@ -18,9 +18,11 @@ export async function getBookmarks() {
 }
 
 export async function addBookmark(article) {
-    const data = dataBody(article);
+    
     try {
-        await fetch(uri,
+        const url = apiUrl + "/insert";
+        const data = dataBody(article);
+        await fetch(url,
             {
                 method: 'POST',
                 headers: {
@@ -37,11 +39,13 @@ export async function addBookmark(article) {
 }
 
 export async function deleteBookmark(article) {
-    const data = dataBody(article)
     try {
-        await fetch(uri,
+        const url = apiUrl + "/delete";
+        const data = dataBody(article);
+
+        await fetch(url,
             {
-                method: 'DELETE',
+                method: 'POST',
                 headers: {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
