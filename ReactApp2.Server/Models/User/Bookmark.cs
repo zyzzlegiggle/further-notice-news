@@ -15,7 +15,6 @@ public class Bookmark
     [Url]
     public string Url { get; set; }
     public string Title { get; set; }
-    [NotMapped]
     public string Source { get; set; }
     public string? UrlToImage { get; set; }
     public string? Description { get; set; }

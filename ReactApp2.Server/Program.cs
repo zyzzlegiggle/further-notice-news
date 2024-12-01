@@ -32,6 +32,7 @@ builder.Services.AddAuthorization();
 builder.Services.AddIdentityApiEndpoints<UserItem>()
     .AddEntityFrameworkStores<UserDbContext>();
 
+
 // logging
 builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
@@ -84,7 +85,18 @@ app.MapPost("/api/bookmark/insert", async (Bookmark bookmark, UserManager<UserIt
         db.Bookmarks.Add(bookmark);
 
         await db.SaveChangesAsync();
-        return Results.Created($"/api/bookmarkitems/{bookmark.Url}", bookmark);
+
+        var bookmarkDto = new BookmarkDto()
+        {
+            Id = bookmark.Id,
+            Title = bookmark.Title,
+            Url = bookmark.Url,
+            Source = bookmark.Source,
+            UrlToImage = bookmark.UrlToImage,
+            Description = bookmark.Description,
+            PublishedAt = bookmark.PublishedAt
+        };
+        return Results.Created($"/api/bookmarkitems/{bookmarkDto.Url}", bookmarkDto);
     }
     catch (Exception ex)
     {
