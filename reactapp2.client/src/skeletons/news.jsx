@@ -18,10 +18,6 @@ function News(url) {
         getData();
     }, []);
 
-    useEffect(() => {
-
-    })
-
     return (
         <>
             {loading ? (

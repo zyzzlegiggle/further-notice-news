@@ -26,7 +26,7 @@ function Article({ articles }) {
         let i = 0;
         while (i < Object.keys(articles).length) {
             const template = (
-                <section className="flex flex-row gap-8 border-b mb-8 pb-8">
+                <section key={`template1-${i}`} className="flex flex-row gap-8 border-b mb-8 pb-8">
                     <article className="basis-2/3">
                         <a href={articles[i]["url"]}>
                             <h1 className="text-3xl font-bold">
@@ -57,7 +57,7 @@ function Article({ articles }) {
                             for (let j = 1; j <= 2; j++) {
                                 if (articles[i + j]) {
                                     sideArticles.push(
-                                        <SideArticle article={articles[i + j]} bookmarked={bookmarked} classes="pb-4 pt-4 border-b" />
+                                        <SideArticle key={`sideArticle2-${i + j}`} article={articles[i + j]} bookmarked={bookmarked} classes="pb-4 pt-4 border-b" />
                                     );
                                 } else {
                                     break;
@@ -72,7 +72,7 @@ function Article({ articles }) {
             );
 
             const template2 = (
-                <section>
+                <section key={`template2-${i}`}>
                     
                     <article>
                         <a href={articles[i]["url"]}>
@@ -106,7 +106,11 @@ function Article({ articles }) {
                             for (let j = 1; j <= 3; j++) {
                                 if (articles[i + j]) {
                                     sideArticles.push(
-                                        <SideArticle article={articles[i + j]} bookmarked={bookmarked} classes={`col-span-1 ${j === 3 ? '' : 'border-r'} px-4 static`} />
+                                        <SideArticle
+                                            key={`sideArticle2-${i + j}`}
+                                            article={articles[i + j]}
+                                            bookmarked={bookmarked}
+                                            classes={`col-span-1 ${j === 3 ? '' : 'border-r'} px-4 static`} />
                                     );
                                 } else {
                                     break;
