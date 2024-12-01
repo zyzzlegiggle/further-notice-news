@@ -16,12 +16,7 @@ public class Bookmark
     public string Url { get; set; }
     public string Title { get; set; }
     [NotMapped]
-    public Dictionary<string, string> Source { get; set; }
-    public string SourceJson
-    {
-        get => Source == null ? null : JsonSerializer.Serialize(Source);
-        set => Source = value == null ? null : JsonSerializer.Deserialize<Dictionary<string, string>>(value);
-    }
+    public string Source { get; set; }
     public string? UrlToImage { get; set; }
     public string? Description { get; set; }
     public string PublishedAt { get; set; }

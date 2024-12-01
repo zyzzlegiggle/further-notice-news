@@ -28,6 +28,11 @@ public class UserDbContext : IdentityDbContext<UserItem>
             .WithMany(u => u.Bookmarks)
             .HasForeignKey(e => e.UserItemId)
             .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasIndex(e => new { e.Url, e.UserItemId })
+                .IsUnique()
+                .HasDatabaseName("IX_Bookmark_Url_UserItemId");
+
         });
     }
 }

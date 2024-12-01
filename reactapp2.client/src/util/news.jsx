@@ -16,20 +16,19 @@ export async function fetchNews(url) {
         }
 
         let data = await response.json();
-
         // filtering 
 
         data = data.articles.filter((article) =>
-            (article.url !== null)
-        );
-
-        data = data.filter((article) =>
-            (article.title !== "[Removed]")
-        );
-
-        data = data.filter((article) =>
+            (article.url !== null) &&
+            (article.title !== "[Removed]") &&
             (article.title !== null)
-        );
+        )
+            .map((article) => ({
+                ...article, 
+                source : article.source?.name || "Source unknown"
+            }))
+
+
 
         return data;
     } catch (error) {
