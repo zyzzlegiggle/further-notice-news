@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import { getBookmarks } from "../util/bookmark";
 import ArticleMenu from "../skeletons/article-menu";
+import { GetUser } from "../util/authorizeview";
 
-function Favorites() {
+function Bookmarks() {
     const [bookmarks, setBookmarks] = useState([]);
     const [loading, setLoading] = useState(true);
-
     useEffect(() => {
         const populateBookmarks = async () => {
             const data = await getBookmarks();
@@ -15,6 +15,8 @@ function Favorites() {
         };
         populateBookmarks();
     }, []);
+
+    
 
     return (
         <div className="container mx-auto py-8 px-16">
@@ -40,4 +42,4 @@ function Favorites() {
     );
 }
 
-export default Favorites;
+export default Bookmarks;

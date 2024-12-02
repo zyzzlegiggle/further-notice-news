@@ -9,6 +9,8 @@ using System.Security.Claims;
 using ReactApp2.Server.Models.User;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Http;
+using System.Net.Http;
+using Microsoft.Build.Logging;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -88,7 +90,6 @@ app.MapPost("/api/bookmark/insert", async (Bookmark bookmark, UserManager<UserIt
 
         var bookmarkDto = new BookmarkDto()
         {
-            Id = bookmark.Id,
             Title = bookmark.Title,
             Url = bookmark.Url,
             Source = bookmark.Source,
@@ -137,6 +138,52 @@ app.MapPost("/api/bookmark/delete", async (Bookmark bookmark, UserManager<UserIt
     {
         return Results.BadRequest($"Error occurred: {ex.Message}");
     }
+});
+
+app.MapGet("/api/bookmark/get", async (UserManager<UserItem> userManager, UserDbContext db, HttpContext httpContext) =>
+{
+    // check if user logged in
+    var user = await userManager.GetUserAsync(httpContext.User);
+    if (user == null)
+    {
+        return Results.BadRequest("User is not logged in");
+    }
+
+    // get all bookmark from logged in user and store in dict?
+    try 
+    {
+        // get all available bookmarks
+        var dataBookmark = await db.Bookmarks
+            .Where(b => b.UserItem.Id == user.Id)
+            .ToListAsync();
+
+        if (!dataBookmark.Any())
+        {
+            return Results.NotFound("bookmark not found");
+        }
+
+        var bookmarkDtos = new List<BookmarkDto>();
+        foreach (var bookmark in dataBookmark)
+        {
+            var dto = new BookmarkDto
+            {
+                Url = bookmark.Url,
+                Title = bookmark.Title,
+                Source = bookmark.Source,
+                UrlToImage = bookmark.UrlToImage,
+                Description = bookmark.Description,
+                PublishedAt = bookmark.PublishedAt,
+            };
+            bookmarkDtos.Add(dto);
+        }
+
+        return Results.Ok(bookmarkDtos);
+    } 
+    catch (Exception ex) 
+    {
+        return Results.BadRequest($"error in getting bookmark: {ex.Message}"); 
+    }
+
 });
 
 // Configure the HTTP request pipeline.

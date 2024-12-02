@@ -4,7 +4,6 @@ import { useNavigate } from "react-router";
 
 
 const userContext = createContext({});
-
 export function AuthorizeView(props) {
     let navigate = useNavigate();
     const [authorized, setAuthorized] = useState(false);
@@ -32,6 +31,7 @@ export function AuthorizeView(props) {
                 if (response.status == 200) {
                     console.log("Authorized");
                     setAuthorized(true);
+                    localStorage.setItem('isLoggedIn', true);
                     let data = await response.json();
                     setUser({ email: data.email });
                 } else if (response.status == 401) {
@@ -83,7 +83,7 @@ export function GetUser(props) {
 
     if (props.value == "email") {
         return <>{user.email}</>
-    } else {
-        return <></>
     }
+
+    return null;
 }

@@ -4,7 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom"
 import Home from "./news_pages/home"
 import ErrorPage from "./error-page"
 import Root, { action as rootAction } from "./root"
-import Favorite from "./news_pages/favorites"
+import Bookmarks from "./news_pages/bookmarks"
 import Search, { loader as searchLoader } from "./search"
 import Entertainment from "./news_pages/entertainment"
 import Science from "./news_pages/science"
@@ -27,8 +27,8 @@ const router = createBrowserRouter([
                 element: <Home />,
             },
             {
-                path: "favorites",
-                element: <Favorite />
+                path: "bookmarks",
+                element: <Bookmarks />
             },
             {
                 path: "entertainment",

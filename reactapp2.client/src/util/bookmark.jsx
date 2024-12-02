@@ -10,7 +10,7 @@ export async function getBookmarks() {
             throw new Error(`Status : ${response.status}`);
         }
 
-        const data = response.json();
+        const data = await response.json();
         return data;
     } catch (error) {
         console.error(error);
