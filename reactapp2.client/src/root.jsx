@@ -43,76 +43,83 @@ function Root() {
     })
     return (
         <>
-            <nav className="container mx-auto items-center flex flex-row">
-                <img
-                    className="size-32 object-contain inline-block mr-10"
-                    src="src/assets/news_logo.png"
-                    alt="news logo"
-                />
-                {paths.map(({ name, path }) => (
-                    <Link key={path} to={path} className={navClasses(path)}>
-                        {name}
-                    </Link>
-                ))}
-
-                <div className="relative">
-                    <button
-                        className="rounded-full bg-[#5271ff]"
-                        onClick={toggleDropdown}
-                    >
-                        <i
-                            className="fa-solid fa-user p-2"
-                            style={{ color: "#ffffff" }}
-                        ></i>
-                    </button>
-
-                    {userDropdown && (
-                        <>
-                            {isLoggedIn ? ( // if user is logged in, show your bookmarks
-                                <div className="absolute mt-2 w-48 bg-white rounded-md shadow-lg">
-                                    <Link
-                                        to="/bookmarks"
-                                        className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                                    >
-                                        Your Bookmarks
-                                    </Link>
-                                </div>
-                            ) : (
-                                <div className="absolute mt-2 w-48 bg-white rounded-md shadow-lg">
-                                    <Link
-                                        to="/register"
-                                        className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                                    >
-                                        Register
-                                    </Link>
-                                    <Link
-                                        to="/login"
-                                        className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                                    >
-                                        Login
-                                    </Link>
-                                </div>
-                            )}
-                        </>
-                    )}
+            <nav className="bg-white flex items-center py-4 px-4 shadow-md">
+                <div className="flex items-center">
+                    <img
+                        className="w-32 h-32 mr-10 object-contain"
+                        src="src/assets/news_logo.png"
+                        alt="news logo"
+                    />
+                    <ul className="flex space-x-4 font-medium">
+                        {paths.map(({ name, path }) => (
+                            <li key={path}>
+                                <Link
+                                    to={path}
+                                    className="text-gray-700 hover:text-[#5271ff] active:text-[#5271ff]"
+                                >
+                                    {name}
+                                </Link>
+                            </li>
+                        ))}
+                    </ul>
                 </div>
 
-                {/* Search bar here, moved outside user dropdown */}
-                <div className="min-h-full">
-                    <Form method="post">
-                        <input
-                            type="search"
-                            id="site-search"
-                            name="search"
-                            className="border p-1"
-                        />
+                <div className="flex items-center ml-auto">
+                    <div className="relative">
                         <button
-                            type="submit"
-                            className="ml-2 p-2.5 rounded-md hover:bg-[#5271ff] hover:text-white"
+                            className="rounded-full bg-[#5271ff] px-3 py-2 text-white hover:bg-blue-700"
+                            onClick={toggleDropdown}
                         >
-                            Search
+                            <i className="fa-solid fa-user"></i>
                         </button>
-                    </Form>
+
+                        {userDropdown && (
+                            <>
+                                {isLoggedIn ? (
+                                    <div className="absolute mt-2 w-48 bg-white rounded-md shadow-lg">
+                                        <Link
+                                            to="/bookmarks"
+                                            className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                                        >
+                                            Your Bookmarks
+                                        </Link>
+                                    </div>
+                                ) : (
+                                    <div className="absolute mt-2 w-48 bg-white rounded-md shadow-lg">
+                                        <Link
+                                            to="/register"
+                                            className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                                        >
+                                            Register
+                                        </Link>
+                                        <Link
+                                            to="/login"
+                                            className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                                        >
+                                            Login
+                                        </Link>
+                                    </div>
+                                )}
+                            </>
+                        )}
+                    </div>
+
+                    <div className="ml-4 flex items-center">
+                        <form method="post" className="flex">
+                            <input
+                                type="search"
+                                id="site-search"
+                                name="search"
+                                className="w-full rounded-md border px-3 py-2 focus:outline-none focus:ring focus:ring-blue-500"
+                            />
+                            <button
+                                type="submit"
+                                className="ml-2 px-3 py-2 rounded-md bg-[#5271ff] text-white hover:bg-blue-700"
+                            >
+                                Search
+                            </button>
+                        </form>
+                    </div>
                 </div>
             </nav>
             <div id="detail">
