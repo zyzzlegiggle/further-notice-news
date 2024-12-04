@@ -29,10 +29,12 @@ export function AuthorizeView(props) {
                 let response = await fetch(url, options);
 
                 if (response.status == 200) {
+                    let data = await response.json();
                     console.log("Authorized");
                     setAuthorized(true);
-                    localStorage.setItem('isLoggedIn', true);
-                    let data = await response.json();
+                    sessionStorage.setItem('isLoggedIn', true);
+                    sessionStorage.setItem('currentUser', data.email)
+                    
                     setUser({ email: data.email });
                 } else if (response.status == 401) {
                     console.log("unauthorized");
@@ -87,3 +89,4 @@ export function GetUser(props) {
 
     return null;
 }
+

@@ -9,9 +9,8 @@ function Bookmarks() {
     useEffect(() => {
         const populateBookmarks = async () => {
             const data = await getBookmarks();
-            setBookmarks(data);
+            if (data) setBookmarks(data);
             setLoading(false);
-            console.log(data);
         };
         populateBookmarks();
     }, []);

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Notification from "../util/notification";
 import { useNavigate } from "react-router";
+
 function Register() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -29,14 +30,13 @@ function Register() {
 
     async function handleSubmit(e) {
         e.preventDefault();
-        
+
         if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            console.error("Please enter a valid email address.");
-            setNotificationMessage("Please enter a valid email address")
+            setNotificationMessage("Please enter a valid email address");
             setSuccessful(false);
             setProcessed(true);
         } else if (password !== confirmPassword) {
-            setNotificationMessage("Password do not match");
+            setNotificationMessage("Passwords do not match");
             setSuccessful(false);
             setProcessed(true);
         } else {
@@ -59,21 +59,17 @@ function Register() {
                             navigate("/login");
                         }, 3000); // 3 seconds
                     } else {
+                        console.log(res);
                         setNotificationMessage("Register Failed");
                         setSuccessful(false);
                     }
                 })
                 .catch((error) => {
-                    setNotificationMessage("Error occurred during registration.");
+                    setNotificationMessage(`Error occurred during registration: ${error}` );
                     setSuccessful(false);
-                    console.error('error is:', error);
+                    console.error("Error:", error);
                 });
         }
-    }
-
-    function handleClick() {
-        setSuccessful(a => !a);
-        setProcessed(true);
     }
 
     useEffect(() => {
@@ -81,13 +77,13 @@ function Register() {
             const timer = setTimeout(() => {
                 setSuccessful(false);
                 setProcessed(false);
-            }, 3000); // currently 3 secs
+            }, 3000); // currently 3 seconds
             return () => clearTimeout(timer);
         }
     }, [processed]);
 
     return (
-        <section className="min-h-screen flex items-center justify-center bg-gray-100 py-8 px-4">
+        <section className="min-h-screen flex items-start justify-center bg-gray-100 py-12 px-4">
             {/* Toast Notification */}
             <Notification
                 message={notificationMessage}
@@ -100,7 +96,9 @@ function Register() {
                 <h1 className="text-3xl text-center font-semibold mb-6">Register</h1>
                 <form onSubmit={handleSubmit}>
                     <section className="mb-4">
-                        <label htmlFor="email" className="block text-sm font-medium">Email</label>
+                        <label htmlFor="email" className="block text-sm font-medium">
+                            Email
+                        </label>
                         <input
                             type="email"
                             name="email"
@@ -113,7 +111,9 @@ function Register() {
                     </section>
 
                     <section className="mb-4">
-                        <label htmlFor="password" className="block text-sm font-medium">Password</label>
+                        <label htmlFor="password" className="block text-sm font-medium">
+                            Password
+                        </label>
                         <input
                             type="password"
                             name="password"
@@ -126,7 +126,9 @@ function Register() {
                     </section>
 
                     <section className="mb-6">
-                        <label htmlFor="confirmPassword" className="block text-sm font-medium">Confirm Password</label>
+                        <label htmlFor="confirmPassword" className="block text-sm font-medium">
+                            Confirm Password
+                        </label>
                         <input
                             type="password"
                             name="confirmPassword"
@@ -145,12 +147,6 @@ function Register() {
                         Submit
                     </button>
                 </form>
-                <button
-                    onClick={handleClick}
-                    className="mt-4 text-sm text-gray-600 underline hover:text-gray-800"
-                >
-                    Test Notification
-                </button>
             </div>
         </section>
     );

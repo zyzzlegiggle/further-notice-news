@@ -6,20 +6,23 @@ import {
 } from "react-router-dom";
 
 import { useLocation } from 'react-router';
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useEffect } from "react";
+import LogoutLink from "./util/logoutlink";
 
 export async function action({ request }) {
     const formData = await request.formData();
     const query = formData.get("search");
+    console.log(query);
     return redirect(`search/${query}`);
 }
 
 function Root() {
     const [userDropdown, setUserDropdown] = useState(false);
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-
+    const [currentUser, setCurrentUser] = useState("");
     const currentPath = useLocation().pathname;
+    const dropdownRef = useRef(null);
 
     const navClasses = (path) => `transition duration-200 ease-in-out mr-2 rounded block py-2 px-3 text-gray-900 hover:bg-[#5271ff] hover:text-white ${currentPath === path ? "bg-[#5271ff] text-white" : ""}`;
 
@@ -31,19 +34,38 @@ function Root() {
         { name: "Health", path: "/health" },
         { name: "Sports", path: "/sports" },
         { name: "Technology", path: "/technology" },
+
+
     ];
 
+    useEffect(() => {
+        const isLoggedIn = sessionStorage.getItem("isLoggedIn") === "true";
+        setIsLoggedIn(isLoggedIn);
+
+        const user = sessionStorage.getItem("currentUser") || "";
+        setCurrentUser(user);
+    }, []);
+
+    //handle dropdown click outside
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+                setUserDropdown(false);
+            }
+        }
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        }
+    })
     const toggleDropdown = () => {
         setUserDropdown((a) => !a);
     };
 
-    useEffect(() => {
-        if (localStorage.getItem("isLoggedIn")) setIsLoggedIn(true);
-        else setIsLoggedIn(false);
-    })
     return (
         <>
-            <nav className="bg-white flex items-center py-4 px-4 shadow-md">
+            <nav className="bg-white flex items-center py-4 px-4 shadow-md sticky top-0 z-50">
                 <div className="flex items-center">
                     <img
                         className="w-32 h-32 mr-10 object-contain"
@@ -65,7 +87,7 @@ function Root() {
                 </div>
 
                 <div className="flex items-center ml-auto">
-                    <div className="relative">
+                    <div className="relative" ref={dropdownRef}>
                         <button
                             className="rounded-full bg-[#5271ff] px-3 py-2 text-white hover:bg-blue-700"
                             onClick={toggleDropdown}
@@ -76,14 +98,30 @@ function Root() {
                         {userDropdown && (
                             <>
                                 {isLoggedIn ? (
-                                    <div className="absolute mt-2 w-48 bg-white rounded-md shadow-lg">
-                                        <Link
-                                            to="/bookmarks"
-                                            className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                                        >
-                                            Your Bookmarks
-                                        </Link>
-                                    </div>
+                                    <>
+                                        <div className="absolute mt-2 w-48 bg-white rounded-md shadow-lg">
+                                            <div
+                                                className="block px-4 py-2 text-gray-700"
+                                            >
+                                                {currentUser}
+                                            </div>
+                                            <Link
+                                                to="/bookmarks"
+                                                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                                            >
+                                                Your Bookmarks
+                                            </Link>
+                                            <div
+                                                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                                            >
+                                                <LogoutLink>Logout</LogoutLink>
+
+                                            </div>
+                                        </div>
+                                    </>
+                                    
+
+                                    
                                 ) : (
                                     <div className="absolute mt-2 w-48 bg-white rounded-md shadow-lg">
                                         <Link
@@ -105,7 +143,7 @@ function Root() {
                     </div>
 
                     <div className="ml-4 flex items-center">
-                        <form method="post" className="flex">
+                        <Form method="post" className="flex">
                             <input
                                 type="search"
                                 id="site-search"
@@ -118,7 +156,7 @@ function Root() {
                             >
                                 Search
                             </button>
-                        </form>
+                        </Form>
                     </div>
                 </div>
             </nav>

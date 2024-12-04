@@ -18,7 +18,7 @@ function LogoutLink(props) {
         })
             .then((data) => {
                 if (data.ok) {
-                    localStorage.setItem("isLoggedIn", false);
+                    sessionStorage.setItem("isLoggedIn", false);
                     navigate("/login");
                 }
 

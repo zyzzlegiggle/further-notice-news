@@ -1,11 +1,14 @@
 import { useState } from "react";
-import Page from "../skeletons/page";
 import { useNavigate } from "react-router";
+import Notification from "../util/notification";
 
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [rememberme, setRememberMe] = useState(false);
+    const [notificationMessage, setNotificationMessage] = useState("");
+    const [successful, setSuccessful] = useState(false);
+    const [processed, setProcessed] = useState(false);
 
     let navigate = useNavigate();
 
@@ -30,103 +33,109 @@ function Login() {
         e.preventDefault();
 
         if (!email || !password) {
-            console.error("Please fill out the forms");
-
-
-
+            setNotificationMessage("Please fill out all the fields.");
+            setSuccessful(false);
+            setProcessed(true);
         } else {
-            let url = "";
-
-            if (rememberme) {
-                url = "/login?useCookies=true";
-            } else {
-                url = "/login?useSessionCookies=true";
-            }
+            const url = rememberme
+                ? "/login?useCookies=true"
+                : "/login?useSessionCookies=true";
 
             await fetch(url, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({
-                    email: email,
-                    password: password,
-                }),
+                body: JSON.stringify({ email, password }),
             })
-            .then((res) => {
-                console.log(res);
-                if (res.ok) {
-                    navigate("/");
-                }
-            })
-            .catch((error) => {
-                console.error(error);
-            })
+                .then((res) => {
+                    if (res.ok) {
+                        setNotificationMessage("Login Successful!");
+                        setSuccessful(true);
+                        setProcessed(true);
+                        setTimeout(() => navigate("/"), 3000); // Wait for 3 seconds before navigation
+                    } else {
+                        setNotificationMessage("Login Failed. Please try again.");
+                        setSuccessful(false);
+                        setProcessed(true);
+                    }
+                })
+                .catch((error) => {
+                    console.error(error);
+                    setNotificationMessage("An error occurred. Please try again.");
+                    setSuccessful(false);
+                    setProcessed(true);
+                });
         }
     }
 
-    
     return (
-        <section className="container mx-auto py-8 px-16 flex flex-row">
-            <section className="basis-2/5"></section>
-            <section className="border rounded-md basis-1/5 p-4">
-                <h1 className="text-3xl text-center font-semibold">Login</h1>
+        <section className="min-h-screen flex items-start justify-center bg-gray-100 py-8 px-4">
+            {/* Notification Section */}
+            <Notification
+                message={notificationMessage}
+                isSuccessful={successful}
+                isVisible={processed}
+            />
+
+            {/* Login Form */}
+            <div className="p-8 bg-white shadow-lg border rounded-lg w-full max-w-sm mt-16">
+                <h1 className="text-3xl text-center font-semibold mb-6">Login</h1>
                 <form onSubmit={handleSubmit}>
+                    {/* Email Input */}
                     <section className="mb-4">
-                        <div>
-                            <label htmlFor="email">Email</label>
-                        </div>
-                        <div>
-                            <input
-                                type="email"
-                                name="email"
-                                id="email"
-                                value={email}
-                                onChange={handleChange}
-                                className="border"
-                                required
-                            />
-                        </div>
+                        <label htmlFor="email" className="block text-sm font-medium">Email</label>
+                        <input
+                            type="email"
+                            name="email"
+                            id="email"
+                            value={email}
+                            onChange={handleChange}
+                            className="w-full p-2 border rounded mt-1"
+                            required
+                        />
                     </section>
 
+                    {/* Password Input */}
                     <section className="mb-4">
-                        <div>
-                            <label htmlFor="password">Password</label>
-                        </div>
-                        <div>
-                            <input
-                                type="password"
-                                name="password"
-                                id="password"
-                                value={password}
-                                onChange={handleChange}
-                                className="border"
-                                required
-                            />
-                        </div>
+                        <label htmlFor="password" className="block text-sm font-medium">Password</label>
+                        <input
+                            type="password"
+                            name="password"
+                            id="password"
+                            value={password}
+                            onChange={handleChange}
+                            className="w-full p-2 border rounded mt-1"
+                            required
+                        />
                     </section>
 
-                    <section className="mb-4">
-                        <div>
-                            <input
-                                type="checkbox"
-                                name="rememberme"
-                                id="rememberme"
-                                onChange={handleChange}
-                            />
-                        </div>
-                        <div>
-                            <label htmlFor="rememberme">Remember Me</label>
-                        </div>
+                    {/* Remember Me Checkbox */}
+                    <section className="mb-6 flex items-center">
+                        <input
+                            type="checkbox"
+                            name="rememberme"
+                            id="rememberme"
+                            onChange={handleChange}
+                            className="mr-2"
+                        />
+                        <label htmlFor="rememberme" className="text-sm">Remember Me</label>
                     </section>
-                    <div className="text-center">
-                        <input type="submit" value="Submit" className="cursor-pointer p-2.5 rounded-md bg-[#5271ff] text-white hover:bg-[#4964e3]" />
-                    </div>
+
+                    {/* Submit Button */}
+                    <button
+                        type="submit"
+                        className="w-full p-2.5 rounded-md bg-[#5271ff] text-white hover:bg-[#4964e3]"
+                    >
+                        Submit
+                    </button>
                 </form>
-            </section>
-            <section className="basis-2/5"></section>
+            </div>
         </section>
     );
+
+
+
 }
 
 export default Login;
