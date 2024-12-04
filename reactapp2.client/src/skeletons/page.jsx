@@ -1,5 +1,5 @@
 // general template page (for news viewing only, currently for logged in user)
-
+//test
 import { AuthorizeView, GetUser } from "../util/authorizeview";
 import LogoutLink from "../util/logoutlink";
 
