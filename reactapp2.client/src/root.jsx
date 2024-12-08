@@ -39,12 +39,14 @@ function Root() {
     ];
 
     useEffect(() => {
-        const isLoggedIn = sessionStorage.getItem("isLoggedIn") === "true";
-        setIsLoggedIn(isLoggedIn);
+        const storageLogged = sessionStorage.getItem("isLoggedIn") === "true";
+        if (isLoggedIn !== storageLogged) {
+            setIsLoggedIn(storageLogged);
+        }
 
         const user = sessionStorage.getItem("currentUser") || "";
         setCurrentUser(user);
-    }, []);
+    }, [isLoggedIn]);
 
     //handle dropdown click outside
     useEffect(() => {
@@ -74,10 +76,11 @@ function Root() {
                     />
                     <ul className="flex space-x-4 font-medium">
                         {paths.map(({ name, path }) => (
-                            <li key={path}>
+                            <li key={path}
+                                className="text-gray-700 hover:text-[#5271ff] active:text-[#5271ff]"
+                            >
                                 <Link
-                                    to={path}
-                                    className="text-gray-700 hover:text-[#5271ff] active:text-[#5271ff]"
+                                    to={isLoggedIn ? path : "#"}
                                 >
                                     {name}
                                 </Link>
@@ -102,21 +105,22 @@ function Root() {
                                         <div className="absolute mt-2 w-48 bg-white rounded-md shadow-lg">
                                             <div
                                                 className="block px-4 py-2 text-gray-700"
+                                                
                                             >
                                                 {currentUser}
                                             </div>
                                             <Link
                                                 to="/bookmarks"
                                                 className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                                                onClick={toggleDropdown}
                                             >
                                                 Your Bookmarks
                                             </Link>
-                                            <div
-                                                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
-                                            >
+                                            <div onClick={toggleDropdown}>
                                                 <LogoutLink>Logout</LogoutLink>
 
                                             </div>
+
                                         </div>
                                     </>
                                     
@@ -125,14 +129,16 @@ function Root() {
                                 ) : (
                                     <div className="absolute mt-2 w-48 bg-white rounded-md shadow-lg">
                                         <Link
-                                            to="/register"
-                                            className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                                                to="/register"
+                                                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                                                onClick={toggleDropdown}
                                         >
                                             Register
                                         </Link>
                                         <Link
                                             to="/login"
-                                            className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                                                className="block px-4 py-2 text-gray-700 hover:bg-gray-100"
+                                                onClick={toggleDropdown}
                                         >
                                             Login
                                         </Link>

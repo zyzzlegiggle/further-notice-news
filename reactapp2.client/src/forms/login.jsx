@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import Notification from "../util/notification";
-
+import { useEffect } from "react";
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -12,6 +12,11 @@ function Login() {
 
     let navigate = useNavigate();
 
+    /*useEffect(() => {
+        if (sessionStorage.getItem("isLoggedIn") === "true") {
+            navigate("/");
+        }
+    }, [])*/
     function handleChange(e) {
         const { name, value } = e.target;
         switch (name) {
@@ -53,11 +58,17 @@ function Login() {
                         setNotificationMessage("Login Successful!");
                         setSuccessful(true);
                         setProcessed(true);
-                        setTimeout(() => navigate("/"), 3000); // Wait for 3 seconds before navigation
+                        setTimeout(() => setProcessed(false), 1500);
+                        setTimeout(() => {
+                            /*window.location.reload();*/
+                            navigate("/");
+                        }, 3000); // Wait for 1.5 seconds before navigation
+                        
                     } else {
                         setNotificationMessage("Login Failed. Please try again.");
                         setSuccessful(false);
                         setProcessed(true);
+                        setTimeout(() => setProcessed(false), 1500);
                     }
                 })
                 .catch((error) => {

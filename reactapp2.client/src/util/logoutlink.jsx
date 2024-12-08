@@ -31,9 +31,9 @@ function LogoutLink(props) {
     };
 
     return (
-        <>
-            <a href="#" onClick={handleSubmit}>{props.children}</a>
-        </>
+        <div className=" cursor-pointer block px-4 py-2 text-gray-700 hover:bg-gray-100" onClick={handleSubmit}>
+            {props.children}
+        </div>
     );
 }
 

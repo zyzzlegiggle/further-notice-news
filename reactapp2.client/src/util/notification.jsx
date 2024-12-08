@@ -1,4 +1,5 @@
 function Notification({ message, isSuccessful, isVisible }) {
+    
     return (
         <div
             id="toast-notification"

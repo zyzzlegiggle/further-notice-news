@@ -9,12 +9,12 @@ function Page({ children, addClass="" }) {
             <section className={`container mx-auto py-8 px-16 ${addClass}`}>
                 {children}
             </section>
-            <LogoutLink>Logout <GetUser value="email" /></LogoutLink>
         </AuthorizeView>
         /*<section className={`container mx-auto py-8 px-16 ${addClass}`}>
             no authorize view
             {children}
         </section>*/
+
     );
 }
 

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Notification from "../util/notification";
 import { useNavigate } from "react-router";
+import { Link } from "react-router-dom";
 
 function Register() {
     const [email, setEmail] = useState("");
@@ -138,6 +139,14 @@ function Register() {
                             className="w-full p-2 border rounded mt-1"
                             required
                         />
+                    </section>
+
+                    <section className="mb-6 hover:text-blue-400">
+                        <Link
+                            to="/login"
+                        >
+                            Have an account?
+                        </Link>
                     </section>
 
                     <button
