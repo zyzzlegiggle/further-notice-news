@@ -2,12 +2,13 @@
   "name": "reactapp2.client",
   "private": true,
   "version": "0.0.0",
-  "type": "module",
   "scripts": {
-    "dev": "npx concurrently \"npx tailwindcss -i ./input.css -o ./output.css\" \"vite\"",
+    "dev": "vite",
     "build": "vite build",
+    "build:css": "npx tailwindcss -i ./styles.css -o ./dist/styles.css --minify",
     "lint": "eslint .",
     "preview": "vite preview"
+
   },
   "dependencies": {
     "react": "^18.3.1",

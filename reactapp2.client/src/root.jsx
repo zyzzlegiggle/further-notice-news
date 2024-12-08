@@ -35,7 +35,6 @@ function Root() {
         { name: "Sports", path: "/sports" },
         { name: "Technology", path: "/technology" },
 
-
     ];
 
     useEffect(() => {

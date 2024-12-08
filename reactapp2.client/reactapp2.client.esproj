@@ -44,4 +44,9 @@
   <ItemGroup>
     <None Remove="src\NewFolder1\**" />
   </ItemGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties package_1json__JsonSchema="https://json.schemastore.org/pantsbuild-2.21.0.json" />
+    </VisualStudio>
+  </ProjectExtensions>
 </Project>
