@@ -137,7 +137,13 @@ function Article({ articles }) {
 
     return (
         <>
-            {articleRows ? articleRows : <p>Loading</p>}
+            {articleRows ? articleRows :
+                <div className="text-red-700">
+                    <p>Loading</p>
+                </div>
+                
+
+            }
         </>
         
     )

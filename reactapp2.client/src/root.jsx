@@ -38,14 +38,25 @@ function Root() {
     ];
 
     useEffect(() => {
-        const storageLogged = sessionStorage.getItem("isLoggedIn") === "true";
-        if (isLoggedIn !== storageLogged) {
-            setIsLoggedIn(storageLogged);
-        }
+        const checkSessionStorage = () => {
+            const storageLogged = sessionStorage.getItem("isLoggedIn") === "true";
+            console.log(storageLogged);
+            if (isLoggedIn !== storageLogged) {
+                setIsLoggedIn(storageLogged);
 
-        const user = sessionStorage.getItem("currentUser") || "";
-        setCurrentUser(user);
-    }, [isLoggedIn]);
+            }
+
+            const user = sessionStorage.getItem("currentUser") || "";
+            if (currentUser !== user) {
+                setCurrentUser(user);
+            }
+        };
+
+        const interval = setInterval(checkSessionStorage, 1000);
+
+        return () => clearInterval(interval);
+
+    }, [isLoggedIn, currentUser]);
 
     //handle dropdown click outside
     useEffect(() => {
@@ -66,7 +77,7 @@ function Root() {
 
     return (
         <>
-            <nav className="bg-white flex items-center py-4 px-4 shadow-md sticky top-0 z-50">
+            <nav className="bg-white flex items-center py-2 px-4 shadow-md sticky top-0 z-50">
                 <div className="flex items-center">
                     <img
                         className="w-32 h-32 mr-10 object-contain"
