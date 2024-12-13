@@ -79,11 +79,14 @@ function Root() {
         <>
             <nav className="bg-white flex items-center py-2 px-4 shadow-md sticky top-0 z-50">
                 <div className="flex items-center">
-                    <img
-                        className="w-32 h-32 mr-10 object-contain"
-                        src="src/assets/news_logo.png"
-                        alt="news logo"
-                    />
+                    <Link to="/">
+                        <img
+                            className="w-32 h-32 mr-10 object-contain"
+                            src="src/assets/news_logo.png"
+                            alt="news logo"
+                        />
+                    </Link>
+                    
                     <ul className="flex space-x-4 font-medium">
                         {paths.map(({ name, path }) => (
                             <li key={path}
