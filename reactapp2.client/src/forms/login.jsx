@@ -15,7 +15,11 @@ function Login() {
 
     let navigate = useNavigate();
 
-
+    useEffect(() => {
+        if (sessionStorage.getItem("isLoggedIn") === "true") {
+            navigate("/");
+        }
+    }, []);
 
     function handleChange(e) {
         const { name, value } = e.target;

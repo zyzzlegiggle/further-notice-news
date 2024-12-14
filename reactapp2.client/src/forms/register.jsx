@@ -12,6 +12,13 @@ function Register() {
     const [notificationMessage, setNotificationMessage] = useState("");
     const [loading, setLoading] = useState(false);
     let navigate = useNavigate();
+
+    useEffect(() => {
+        if (sessionStorage.getItem("isLoggedIn") === "true") {
+            navigate("/");
+        }
+    }, []);
+
     function handleChange(e) {
         const { name, value } = e.target;
         switch (name) {
@@ -28,6 +35,7 @@ function Register() {
                 console.error("Unknown name form");
         }
     }
+
 
     async function handleSubmit(e) {
         e.preventDefault();
