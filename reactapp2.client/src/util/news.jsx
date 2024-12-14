@@ -21,7 +21,8 @@ export async function fetchNews(url) {
         data = data.articles.filter((article) =>
             (article.url !== null) &&
             (article.title !== "[Removed]") &&
-            (article.title !== null)
+            (article.title !== null) &&
+            (article.source.name !== "Google News")
         )
             .map((article) => ({
                 ...article, 

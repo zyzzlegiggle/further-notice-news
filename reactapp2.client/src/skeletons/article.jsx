@@ -45,7 +45,7 @@ function Article({ articles }) {
                                 onError={(img) => {
                                     img.onerror = null; // prevent looping
                                     img.currentTarget.src = errorImage;
-                                    img.currentTarget.className = "h-128 w-full mx-auto rounded pt-4";
+                                    img.currentTarget.className = "mx-auto rounded";
                                 }}
                             />
                         </a>
@@ -92,7 +92,7 @@ function Article({ articles }) {
                                     onError={(img) => {
                                         img.onerror = null; // prevent looping
                                         img.currentTarget.src = errorImage;
-                                        img.currentTarget.className = "rounded h-128 w-full place-items-center ";
+                                        img.currentTarget.className = "rounded mx-auto";
                                     }}
 
                                 />
