@@ -5,11 +5,11 @@ import LogoutLink from "../util/logoutlink";
 
 function Page({ children, addClass="" }) {
     return (
-        <AuthorizeView>
-            <section className={`container mx-auto py-8 px-16 ${addClass}`}>
+        <section className={`container mx-auto py-8 px-16 ${addClass}`}>
+            <AuthorizeView>
                 {children}
-            </section>
-        </AuthorizeView>
+            </AuthorizeView>
+        </section>
         /*<section className={`container mx-auto py-8 px-16 ${addClass}`}>
             no authorize view
             {children}

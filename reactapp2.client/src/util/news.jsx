@@ -3,7 +3,7 @@ Any news api related function put here
 such as fetch news
 */
 
-const key = '3a921d7a74124a5892f7e8c987e85095';
+const key = import.meta.env.VITE_KEY_NEWSAPI;
 
 // putting apikey in url is not needed
 export async function fetchNews(url) {

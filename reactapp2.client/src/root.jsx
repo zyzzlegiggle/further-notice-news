@@ -9,7 +9,7 @@ import { useLocation } from 'react-router';
 import { useRef, useState } from "react";
 import { useEffect } from "react";
 import LogoutLink from "./util/logoutlink";
-
+import { useNavigation } from "react-router";
 export async function action({ request }) {
     const formData = await request.formData();
     const query = formData.get("search");
@@ -23,6 +23,7 @@ function Root() {
     const [currentUser, setCurrentUser] = useState("");
     const currentPath = useLocation().pathname;
     const dropdownRef = useRef(null);
+    const navigation = useNavigation(); 
 
     const navClasses = (path) => `transition duration-200 ease-in-out mr-2 rounded block py-2 px-3 text-gray-900 hover:bg-[#5271ff] hover:text-white ${currentPath === path ? "bg-[#5271ff] text-white" : ""}`;
 
@@ -179,6 +180,15 @@ function Root() {
                     </div>
                 </div>
             </nav>
+            <div className= {
+                navigation.state === "loading" ? "fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center" : ""
+            }>
+                {navigation.state === "loading" && (
+                    <div className="spinner-border animate-spin border-white text-white" role="status">
+                        <span className="visually-hidden">Loading...</span>
+                    </div>
+                )}
+            </div>
             <div id="detail">
                 <Outlet />
             </div>
