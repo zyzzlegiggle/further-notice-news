@@ -27,8 +27,6 @@ var UserDbContext = builder.Configuration.GetConnectionString("UserDbContext") ?
 builder.Services.AddDbContext<UserDbContext>(
     options => options.UseSqlServer(UserDbContext));
 
-builder.Services.AddDatabaseDeveloperPageExceptionFilter(); // to help debug in console for db
-
 // identity
 builder.Services.AddAuthorization();
 builder.Services.AddIdentityApiEndpoints<UserItem>()
