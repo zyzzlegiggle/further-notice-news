@@ -47,28 +47,28 @@ export default defineConfig({
     server: {
         proxy: {
             '^/api/*': {
-                target: 'https://localhost:7295/',
+                target: 'https://localhost:8080/',
                 secure: false
             },
             '^/pingauth': {
-                target: 'https://localhost:7295/',
+                target: 'https://localhost:8080/',
                 secure: false
             },
             '^/register': {
-                target: 'https://localhost:7295/',
+                target: 'https://localhost:8080/',
                 secure: false
             },
             '^/login': {
-                target: 'https://localhost:7295/',
+                target: 'https://localhost:8080/',
                 secure: false
             },
             '^/logout': {
-                target: 'https://localhost:7295/',
+                target: 'https://localhost:8080/',
                 secure: false
             }
             
         },
-        port: 5173,
+        port: 3000,
         https: {
             key: fs.readFileSync(keyFilePath),
             cert: fs.readFileSync(certFilePath),
