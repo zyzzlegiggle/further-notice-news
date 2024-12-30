@@ -4,8 +4,7 @@
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
-    "build": "vite build",
-    "build:css": "npx tailwindcss -i ./styles.css -o ./dist/styles.css --minify",
+    "build": "vite build && npx tailwindcss -i ./styles.css -o ./dist/styles.css --minify",
     "lint": "eslint .",
     "preview": "vite preview"
   },
