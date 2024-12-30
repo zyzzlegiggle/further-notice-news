@@ -9,6 +9,7 @@
     <PublishAssetsDirectory>$(MSBuildProjectDirectory)\dist</PublishAssetsDirectory>
   </PropertyGroup>
   <ItemGroup>
+    <Folder Include="public\images\" />
     <Folder Include="src\util\" />
   </ItemGroup>
   <ItemGroup>

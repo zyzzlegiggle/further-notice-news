@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { addBookmark, deleteBookmark, getBookmarks } from "../util/bookmark";
 import { getRandomInt } from "../util/util";
 import ArticleMenu from "./article-menu";
-import errorImage from "../assets/error_img.png";
+import errorImage from "/images/error_img.png";
 function Article({ articles }) {
     const [bookmarked, setBookmarked] = useState([]);
     const [articleRows, setArticleRows] = useState([]);

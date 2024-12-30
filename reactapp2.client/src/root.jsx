@@ -83,7 +83,7 @@ function Root() {
                     <Link to="/">
                         <img
                             className="w-32 h-32 mr-10 object-contain"
-                            src="src/assets/news_logo.png"
+                            src="/images/news_logo.png"
                             alt="news logo"
                         />
                     </Link>

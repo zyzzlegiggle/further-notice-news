@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { getBookmarks } from "../util/bookmark";
 import ArticleMenu from "../skeletons/article-menu";
 import { GetUser } from "../util/authorizeview";
-import errorImage from "../assets/error_img.png";
+import errorImage from "/images/error_img.png";
 
 
 function Bookmarks() {
