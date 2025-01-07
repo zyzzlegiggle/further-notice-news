@@ -1,27 +1,19 @@
-#See https://aka.ms/customizecontainer to learn how to customize your debug container and how Visual Studio uses this Dockerfile to build your images for faster debugging.
-
-FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS base
-USER app
-WORKDIR /app
-EXPOSE 8080
-EXPOSE 8081
-
+# Use .NET 8 SDK to build the application
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
-ARG BUILD_CONFIGURATION=Release
-WORKDIR /src
-COPY ["reactapp2.client/nuget.config", "reactapp2.client/"]
-COPY ["ReactApp2.Server/ReactApp2.Server.csproj", "ReactApp2.Server/"]
-COPY ["reactapp2.client/reactapp2.client.esproj", "reactapp2.client/"]
-RUN dotnet restore "./ReactApp2.Server/./ReactApp2.Server.csproj"
-COPY . .
-WORKDIR "/src/ReactApp2.Server"
-RUN dotnet build "./ReactApp2.Server.csproj" -c $BUILD_CONFIGURATION -o /app/build
-
-FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./ReactApp2.Server.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
-
-FROM base AS final
+# Set the working directory
 WORKDIR /app
-COPY --from=publish /app/publish .
+# Copy the project files
+COPY . .
+# Restore and build the project
+RUN dotnet restore
+RUN dotnet publish -c Release -o out
+# Final stage: run the application using the ASP.NET Core runtime
+FROM mcr.microsoft.com/dotnet/aspnet:8.0
+WORKDIR /app
+COPY --from=build /app/out .
+# Expose port 8080 for the application
+EXPOSE 8080
+# Set the application to listen on IPv4 only
+ENV ASPNETCORE_URLS=http://0.0.0.0:80
+# Run the application
 ENTRYPOINT ["dotnet", "ReactApp2.Server.dll"]

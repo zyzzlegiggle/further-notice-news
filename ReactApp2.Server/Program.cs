@@ -25,7 +25,7 @@ builder.Services.AddSwaggerGen();
 
 var UserDbContext = builder.Configuration.GetConnectionString("UserDbContext") ?? throw new InvalidOperationException("No connection string UserDbContext");
 builder.Services.AddDbContext<UserDbContext>(
-    options => options.UseSqlServer(UserDbContext));
+    options => options.UseNpgsql(UserDbContext));
 
 // identity
 builder.Services.AddAuthorization();
