@@ -53,23 +53,23 @@ export default defineConfig({
     server: {
         proxy: {
             '^/api/*': {
-                target: 'https://localhost:8080/',
+                target: 'http://localhost:8080/',
                 secure: false
             },
             '^/pingauth': {
-                target: 'https://localhost:8080/',
+                target: 'http://localhost:8080/',
                 secure: false
             },
             '^/register': {
-                target: 'https://localhost:8080/',
+                target: 'http://localhost:8080/',
                 secure: false
             },
             '^/login': {
-                target: 'https://localhost:8080/',
+                target: 'http://localhost:8080/',
                 secure: false
             },
             '^/logout': {
-                target: 'https://localhost:8080/',
+                target: 'http://localhost:8080/',
                 secure: false
             }
             
