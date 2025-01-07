@@ -13,7 +13,7 @@ export async function getBookmarks() {
         const data = await response.json();
         return data;
     } catch (error) {
-        console.error(error);
+        //console.error(error);
     }
 }
 
@@ -33,7 +33,7 @@ export async function addBookmark(article) {
             }
         )
     } catch (e) {
-        console.error(e);
+        //console.error(e);
     }
 
 }
@@ -54,7 +54,7 @@ export async function deleteBookmark(article) {
             }
         )
     } catch (e) {
-        console.error(e);
+        //console.error(e);
     }
 }
 

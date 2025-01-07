@@ -13,7 +13,6 @@ import { useNavigation } from "react-router";
 export async function action({ request }) {
     const formData = await request.formData();
     const query = formData.get("search");
-    console.log(query);
     return redirect(`search/${query}`);
 }
 
@@ -41,7 +40,6 @@ function Root() {
     useEffect(() => {
         const checkSessionStorage = () => {
             const storageLogged = sessionStorage.getItem("isLoggedIn") === "true";
-            console.log(storageLogged);
             if (isLoggedIn !== storageLogged) {
                 setIsLoggedIn(storageLogged);
 

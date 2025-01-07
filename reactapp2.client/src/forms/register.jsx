@@ -74,7 +74,6 @@ function Register() {
                             navigate("/login");
                         }, 3000); // 3 seconds
                     } else {
-                        console.log(res);
                         setNotificationMessage("Register Failed");
                         setSuccessful(false);
                         setLoading(false)

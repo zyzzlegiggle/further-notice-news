@@ -30,19 +30,13 @@ export function AuthorizeView(props) {
 
                 if (response.status == 200) {
                     let data = await response.json();
-                    console.log("Authorized");
                     setAuthorized(true);
                     sessionStorage.setItem('isLoggedIn', true);
                     sessionStorage.setItem('currentUser', data.email)
                     
                     setUser({ email: data.email });
-                } else if (response.status == 401) {
-                    console.log("unauthorized");
-                } else {
-                    console.error("error + " + response.status)
-                }
+                } 
             } catch (e) {
-                console.log("error while fetching. retry count: " + retryCount);
                 retryCount += 1;
                 if (retryCount > maxRetry) {
                     throw e;
