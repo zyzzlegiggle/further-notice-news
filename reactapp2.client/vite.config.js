@@ -51,29 +51,7 @@ export default defineConfig({
         }
     },
     server: {
-        proxy: {
-            '^/api/*': {
-                target: 'http://localhost:8080/',
-                secure: false
-            },
-            '^/pingauth': {
-                target: 'http://localhost:8080/',
-                secure: false
-            },
-            '^/register': {
-                target: 'http://localhost:8080/',
-                secure: false
-            },
-            '^/login': {
-                target: 'http://localhost:8080/',
-                secure: false
-            },
-            '^/logout': {
-                target: 'http://localhost:8080/',
-                secure: false
-            }
-            
-        },
+        
         port: 3000,
         https: {
             key: fs.readFileSync(keyFilePath),

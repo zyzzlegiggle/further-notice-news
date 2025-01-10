@@ -12,7 +12,22 @@ using Microsoft.AspNetCore.Http;
 using System.Net.Http;
 using Microsoft.Build.Logging;
 
+var AllowSpecificOrigins = "_AllowSpecificOrigins";
+
 var builder = WebApplication.CreateBuilder(args);
+
+
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy(name: AllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.WithOrigins("https://localhost:3000")
+                          .AllowAnyHeader()
+                          .AllowAnyMethod();
+                      });
+});
 
 // Add services to the container.
 
@@ -38,6 +53,8 @@ builder.Logging.ClearProviders();
 builder.Logging.AddConsole();
 
 var app = builder.Build();
+
+app.UseCors(AllowSpecificOrigins);
 
 app.UseDefaultFiles();
 app.UseStaticFiles();
@@ -192,8 +209,6 @@ if (app.Environment.IsDevelopment())
 }
 
 
-
-app.UseHttpsRedirection();
 
 app.UseAuthorization();
 

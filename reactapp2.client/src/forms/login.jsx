@@ -4,6 +4,9 @@ import Notification from "../util/notification";
 import { useEffect } from "react";
 import { redirect } from "react-router-dom";
 import { useRef } from "react";
+
+const apiUrl = import.meta.env.VITE_APIURL;
+
 function Login() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -49,8 +52,8 @@ function Login() {
             setProcessed(true);
         } else {
             const url = rememberme
-                ? "/login?useCookies=true"
-                : "/login?useSessionCookies=true";
+                ? new URL("/login?useCookies=true", apiUrl)
+                : new URL("/login?useSessionCookies=true", apiUrl);
 
             await fetch(url, {
                 method: "POST",

@@ -2,6 +2,7 @@ import { useContext, useEffect } from "react";
 import { createContext, useState } from "react";
 import { useNavigate } from "react-router";
 
+const apiUrl = import.meta.env.VITE_APIURL;
 
 const userContext = createContext({});
 export function AuthorizeView(props) {
@@ -27,7 +28,7 @@ export function AuthorizeView(props) {
         async function fetchRetry(url, options) {
             try {
                 let response = await fetch(url, options);
-
+                console.log(response);
                 if (response.status == 200) {
                     let data = await response.json();
                     setAuthorized(true);
@@ -49,7 +50,8 @@ export function AuthorizeView(props) {
         }
 
         // call fetch
-        fetchRetry("/pingauth", { method: "GET" })
+        const url = new URL("/pingauth", apiUrl);
+        fetchRetry(url, { method: "GET" })
             .catch((e) => console.error("Error fetching: ", e))
             .finally(() => setLoading(false));
     }, []);
