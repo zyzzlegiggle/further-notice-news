@@ -3,6 +3,8 @@ import Notification from "../util/notification";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 
+const apiUrl = import.meta.env.VITE_APIURL;
+
 function Register() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -55,7 +57,8 @@ function Register() {
             setLoading(false);
             setTimeout(() => setProcessed(false), 1500);
         } else {
-            await fetch("/register", {
+            const url = new URL("/register", apiUrl)
+            await fetch(url, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
