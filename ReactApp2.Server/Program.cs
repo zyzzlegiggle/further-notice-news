@@ -25,7 +25,8 @@ builder.Services.AddCors(options =>
                       {
                           policy.WithOrigins("https://localhost:3000")
                           .AllowAnyHeader()
-                          .AllowAnyMethod();
+                          .AllowAnyMethod()
+                          .AllowCredentials();
                       });
 });
 
@@ -55,6 +56,18 @@ builder.Logging.AddConsole();
 var app = builder.Build();
 
 app.UseCors(AllowSpecificOrigins);
+app.Use(async (context, next) =>
+{
+    var origin = context.Request.Headers["Origin"].ToString();
+    if (!string.IsNullOrEmpty(origin))
+    {
+        var logger = app.Services.GetRequiredService<ILogger<Program>>();
+        logger.LogInformation($"Request Origin: {origin}");
+    }
+
+    // Proceed to the next middleware
+    await next.Invoke();
+});
 
 app.UseDefaultFiles();
 app.UseStaticFiles();

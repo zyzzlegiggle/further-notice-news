@@ -1,11 +1,13 @@
-
-
-const apiUrl = '/api/bookmark';
+let apiUrl = import.meta.env.VITE_APIURL;
+apiUrl = new URL('api/bookmark', apiUrl);
 
 export async function getBookmarks() { 
     try {
         const url = apiUrl + "/get";
-        const response = await fetch(url);
+
+        const response = await fetch(url, {
+            credentials: 'include'
+        });
         if (!response.ok) {
             throw new Error(`Status : ${response.status}`);
         }
@@ -29,7 +31,8 @@ export async function addBookmark(article) {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify(data),
+                credentials: 'include'
             }
         )
     } catch (e) {
@@ -50,7 +53,8 @@ export async function deleteBookmark(article) {
                     'Accept': 'application/json',
                     'Content-Type': 'application/json'
                 },
-                body: JSON.stringify(data)
+                body: JSON.stringify(data),
+                credentials: 'include'
             }
         )
     } catch (e) {

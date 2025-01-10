@@ -27,8 +27,10 @@ export function AuthorizeView(props) {
         // define a fetch function that retries until status 200 or 401
         async function fetchRetry(url, options) {
             try {
-                let response = await fetch(url, options);
-                console.log(response);
+                let response = await fetch(url, {
+                    ...options,
+                    credentials: 'include'
+                });
                 if (response.status == 200) {
                     let data = await response.json();
                     setAuthorized(true);
