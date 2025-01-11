@@ -34,9 +34,12 @@ function Article({ articles }) {
                             </h1>
                         </a>
                         <ArticleMenu article={articles[i]} bookmarked={bookmarked} />
-                        <p className="text-justify pt-2">
-                            {articles[i]["description"]}
-                        </p>
+                        
+                        <a href={articles[i]["url"]}>
+                            <p className="text-justify pt-2">
+                                {articles[i]["description"]}
+                            </p>
+                        </a>
                         <a href={articles[i]["url"]}>
                             <img
                                 className="h-128 w-full mx-auto rounded pt-4"
@@ -81,7 +84,9 @@ function Article({ articles }) {
                             </h1>
                         </a>
                         <span><ArticleMenu article={articles[i]} bookmarked={bookmarked} /></span>
-                        <p className="text-justify pt-2">{articles[i]["description"]}</p>
+                        <a href={articles[i]["url"]}>
+                            <p className="text-justify pt-2">{articles[i]["description"]}</p>
+                        </a>
                         <div className="flex flex-row pt-8">
                             <div className="basis-1/6"></div>
                             <a href={articles[i]["url"]} className="basis-4/6">
@@ -158,7 +163,10 @@ function SideArticle({ article, bookmarked, classes="" }) {
                 </h1>
             </a>
             <ArticleMenu article={article} bookmarked={bookmarked} />
-            <p className="pt-2">{article["description"]}</p>
+            <a href={article["url"]}>
+                <p className="pt-2">{article["description"]}</p>
+            </a>
+
         </article>
     )
 }

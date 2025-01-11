@@ -64,7 +64,6 @@ function Login() {
                 credentials: 'include'
             })
                 .then((res) => {
-                    console.log(res);
                     if (res.ok) {
                         setNotificationMessage("Login Successful!");
                         setSuccessful(true);
@@ -87,6 +86,8 @@ function Login() {
                     setNotificationMessage("An error occurred. Please try again.");
                     setSuccessful(false);
                     setProcessed(true);
+                    setLoading(false);
+
                     setTimeout(() => setProcessed(false), 1500);
                 });
         }
