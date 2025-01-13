@@ -11,6 +11,9 @@ using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Http;
 using System.Net.Http;
 using Microsoft.Build.Logging;
+using System;
+using System.Xml;
+using System.ServiceModel.Syndication;
 
 var AllowSpecificOrigins = "_AllowSpecificOrigins";
 
@@ -200,6 +203,33 @@ app.MapGet("/api/bookmark/get", async (UserManager<UserItem> userManager, UserDb
         return Results.BadRequest($"error in getting bookmark: {ex.Message}"); 
     }
 
+});
+
+app.MapGet("/api/news", async () =>
+{
+    var feedUrl = "https://rss.nytimes.com/services/xml/rss/nyt/World.xml"; // Replace with the actual RSS feed URL
+    var feedItems = new List<object>();
+
+    using (var reader = XmlReader.Create(feedUrl))
+    {
+        var feed = SyndicationFeed.Load(reader);
+        if (feed != null)
+        {
+            feedItems = feed.Items.Select(item => new
+            {
+                Title = item.Title?.Text,
+                Description = item.Summary?.Text,
+                Link = item.Links.FirstOrDefault().Uri.ToString(),
+                PublishedAt = item.PublishDate.ToString("o"),
+                Source = feed.Title?.Text, 
+                ImageUrl = item.ElementExtensions
+                    .Where(ext => ext.OuterName == "thumbnail" || ext.OuterName == "image")
+                    .Select(ext => ext.GetObject<string>()) 
+                    .FirstOrDefault()
+            }).ToList<object>();
+        }
+    }
+    return Results.Json(feedItems);
 });
 
 // Configure the HTTP request pipeline.
