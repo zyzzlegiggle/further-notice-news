@@ -14,6 +14,9 @@ using Microsoft.Build.Logging;
 using System;
 using System.Xml;
 using System.ServiceModel.Syndication;
+using System.Net.Http;
+using HtmlAgilityPack;
+using System.Text.RegularExpressions;
 
 var AllowSpecificOrigins = "_AllowSpecificOrigins";
 
@@ -205,9 +208,10 @@ app.MapGet("/api/bookmark/get", async (UserManager<UserItem> userManager, UserDb
 
 });
 
+// fetch news
 app.MapGet("/api/news", async () =>
 {
-    var feedUrl = "https://rss.nytimes.com/services/xml/rss/nyt/World.xml"; // Replace with the actual RSS feed URL
+    var feedUrl = "https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en";
     var feedItems = new List<object>();
 
     using (var reader = XmlReader.Create(feedUrl))
@@ -215,22 +219,65 @@ app.MapGet("/api/news", async () =>
         var feed = SyndicationFeed.Load(reader);
         if (feed != null)
         {
-            feedItems = feed.Items.Select(item => new
+            foreach (var item in feed.Items)
             {
-                Title = item.Title?.Text,
-                Description = item.Summary?.Text,
-                Link = item.Links.FirstOrDefault().Uri.ToString(),
-                PublishedAt = item.PublishDate.ToString("o"),
-                Source = feed.Title?.Text, 
-                ImageUrl = item.ElementExtensions
-                    .Where(ext => ext.OuterName == "thumbnail" || ext.OuterName == "image")
-                    .Select(ext => ext.GetObject<string>()) 
-                    .FirstOrDefault()
-            }).ToList<object>();
+                string desc = item.Summary?.Text;
+
+                if (desc != null)
+                {
+                    int found = 0;
+
+                    //remove prefix
+                    found = desc.IndexOf("_blank");
+                    desc = desc.Substring(found + 8);
+
+                    // remove suffix
+                    found = desc.IndexOf("</a>");
+                    desc = desc.Substring(0, found);
+                }
+
+                var thumbnailUrl = item.ElementExtensions
+                    .Where(ext => ext.OuterName == "content" && ext.OuterNamespace == "http://search.yahoo.com/mrss/")
+                    .Select(ext => ext.GetObject<Uri>())
+                    .FirstOrDefault()?.ToString();
+
+                if (string.IsNullOrEmpty(thumbnailUrl))
+                {
+                    thumbnailUrl = await GetThumbnailFromMetadataAsync(item.Links.FirstOrDefault()?.Uri.ToString() ?? string.Empty);
+                }
+
+                feedItems.Add(new
+                {
+                    Title = item.Title.Text,
+                    Link = item.Links.FirstOrDefault()?.Uri.ToString(),
+                    PublishedAt = item.PublishDate,
+                    Description = desc,
+                    Source = new
+                    {
+                        Name =  item.SourceFeed?.Title?.Text,
+                    },
+                    urlToImage = thumbnailUrl
+                });
+            }
         }
     }
     return Results.Json(feedItems);
 });
+
+async Task<string?> GetThumbnailFromMetadataAsync(string articleUrl)
+{
+    using var httpClient = new HttpClient();
+    var html = await httpClient.GetStringAsync(articleUrl);
+
+    var htmlDoc = new HtmlDocument();
+    htmlDoc.LoadHtml(html);
+
+    var metaTag = htmlDoc.DocumentNode
+        .SelectSingleNode("//meta[@property='og:image']") ??
+        htmlDoc.DocumentNode.SelectSingleNode("//meta[@name='twitter:image']");
+
+    return metaTag?.GetAttributeValue("content", null);
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
