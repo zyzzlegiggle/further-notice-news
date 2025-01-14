@@ -236,15 +236,6 @@ app.MapGet("/api/news", async () =>
                     desc = desc.Substring(0, found);
                 }
 
-                var thumbnailUrl = item.ElementExtensions
-                    .Where(ext => ext.OuterName == "content" && ext.OuterNamespace == "http://search.yahoo.com/mrss/")
-                    .Select(ext => ext.GetObject<Uri>())
-                    .FirstOrDefault()?.ToString();
-
-                if (string.IsNullOrEmpty(thumbnailUrl))
-                {
-                    thumbnailUrl = await GetThumbnailFromMetadataAsync(item.Links.FirstOrDefault()?.Uri.ToString() ?? string.Empty);
-                }
 
                 feedItems.Add(new
                 {
@@ -256,7 +247,7 @@ app.MapGet("/api/news", async () =>
                     {
                         Name =  item.SourceFeed?.Title?.Text,
                     },
-                    urlToImage = thumbnailUrl
+                    urlToImage = "null"
                 });
             }
         }
@@ -264,20 +255,6 @@ app.MapGet("/api/news", async () =>
     return Results.Json(feedItems);
 });
 
-async Task<string?> GetThumbnailFromMetadataAsync(string articleUrl)
-{
-    using var httpClient = new HttpClient();
-    var html = await httpClient.GetStringAsync(articleUrl);
-
-    var htmlDoc = new HtmlDocument();
-    htmlDoc.LoadHtml(html);
-
-    var metaTag = htmlDoc.DocumentNode
-        .SelectSingleNode("//meta[@property='og:image']") ??
-        htmlDoc.DocumentNode.SelectSingleNode("//meta[@name='twitter:image']");
-
-    return metaTag?.GetAttributeValue("content", null);
-}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
