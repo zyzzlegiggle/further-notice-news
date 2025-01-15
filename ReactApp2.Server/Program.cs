@@ -29,7 +29,8 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: AllowSpecificOrigins,
                       policy =>
                       {
-                          policy.WithOrigins("https://further-notice.onrender.com")
+                          policy.WithOrigins("https://further-notice.onrender.com",
+                              "https://localhost:3000")
                           .AllowAnyHeader()
                           .AllowAnyMethod()
                           .AllowCredentials();
@@ -208,12 +209,26 @@ app.MapGet("/api/bookmark/get", async (UserManager<UserItem> userManager, UserDb
 
 });
 
-// fetch news
-app.MapGet("/api/news", async () =>
+// fetch news (following newsapi structure)
+app.MapGet("/api/news", async (string? category) =>
 {
-    var feedUrl = "https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en";
-    var feedItems = new List<object>();
+    Console.WriteLine("fetching ");
+    var today = DateTime.UtcNow;
+    var threeDaysAgo = today.AddDays(-3);
+    string feedUrl;
+    if (!string.IsNullOrWhiteSpace(category))
+    {
+        feedUrl = $"https://news.google.com/rss/headlines/section/topic/{category.ToUpper()}?hl=en-US&gl=US&ceid=US:en";
+    }
+    else
+    {
+        feedUrl = "https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en";
+    }
 
+    Console.WriteLine(feedUrl);
+
+    var feedItems = new List<object>();
+    var articles = new List<object>();
     using (var reader = XmlReader.Create(feedUrl))
     {
         var feed = SyndicationFeed.Load(reader);
@@ -237,10 +252,10 @@ app.MapGet("/api/news", async () =>
                 }
 
 
-                feedItems.Add(new
+                articles.Add(new
                 {
                     Title = item.Title.Text,
-                    Link = item.Links.FirstOrDefault()?.Uri.ToString(),
+                    Url = item.Links.FirstOrDefault()?.Uri.ToString(),
                     PublishedAt = item.PublishDate,
                     Description = desc,
                     Source = new
@@ -252,7 +267,68 @@ app.MapGet("/api/news", async () =>
             }
         }
     }
-    return Results.Json(feedItems);
+    return Results.Json(new { articles });
+});
+
+app.MapGet("/api/news/search", async (string? query) =>
+{
+    Console.WriteLine("fetching ");
+    var today = DateTime.UtcNow;
+    var threeDaysAgo = today.AddDays(-3);
+    string feedUrl;
+    if (!string.IsNullOrWhiteSpace(query))
+    {
+        query = Uri.EscapeDataString(query);
+        feedUrl = $"https://news.google.com/rss/search?q={query}+after:{threeDaysAgo:yyyy-MM-dd}+before:{today:yyyy-MM-dd}&ceid=US:en&hl=en-US&gl=US";
+    }
+    else
+    {
+        feedUrl = "https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en"; // default
+    }
+
+    Console.WriteLine(feedUrl);
+
+    var feedItems = new List<object>();
+    var articles = new List<object>();
+    using (var reader = XmlReader.Create(feedUrl))
+    {
+        var feed = SyndicationFeed.Load(reader);
+        if (feed != null)
+        {
+            foreach (var item in feed.Items)
+            {
+                string desc = item.Summary?.Text;
+
+                if (desc != null)
+                {
+                    int found = 0;
+
+                    //remove prefix
+                    found = desc.IndexOf("_blank");
+                    desc = desc.Substring(found + 8);
+
+                    // remove suffix
+                    found = desc.IndexOf("</a>");
+                    desc = desc.Substring(0, found);
+                }
+
+
+                articles.Add(new
+                {
+                    Title = item.Title.Text,
+                    Url = item.Links.FirstOrDefault()?.Uri.ToString(),
+                    PublishedAt = item.PublishDate,
+                    Description = desc,
+                    Source = new
+                    {
+                        Name = item.SourceFeed?.Title?.Text,
+                    },
+                    urlToImage = "null"
+                });
+            }
+        }
+    }
+    return Results.Json(new { articles });
 });
 
 

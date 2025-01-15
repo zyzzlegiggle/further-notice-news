@@ -1,8 +1,11 @@
 import { useEffect } from "react";
 import News from "../skeletons/news";
 
+const newsUrl = import.meta.env.VITE_GENERAL_URL;
+
+
 function Home() {
-    const url = "https://newsapi.org/v2/top-headlines?country=us";
+    const url = newsUrl;
 
     
 

@@ -1,8 +1,10 @@
 import News from '../skeletons/news';
 
+const newsUrl = import.meta.env.VITE_CATEGORY_URL;
+
 
 function Health() {
-    const url = "https://newsapi.org/v2/top-headlines?category=health";
+    const url = `${newsUrl}health`;
     return (
         <News url={url}/>
     );

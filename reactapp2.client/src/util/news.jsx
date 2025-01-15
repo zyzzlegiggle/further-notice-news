@@ -8,8 +8,9 @@ const key = import.meta.env.VITE_KEY_NEWSAPI;
 // putting apikey in url is not needed
 export async function fetchNews(url) {
     try {
-        url = url + `&apiKey=${key}`;
+        //url = url + `&apiKey=${key}`; // for newsapi
         const response = await fetch(url);
+        console.log(response);
 
         if (!response.ok) {
             throw new Error(`Response status: ${response.status}`);
