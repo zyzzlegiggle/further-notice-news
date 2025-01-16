@@ -17,6 +17,8 @@ using System.ServiceModel.Syndication;
 using System.Net.Http;
 using HtmlAgilityPack;
 using System.Text.RegularExpressions;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using System.Text.Json;
 
 var AllowSpecificOrigins = "_AllowSpecificOrigins";
 
@@ -225,69 +227,13 @@ app.MapGet("/api/news", async (string? category) =>
         feedUrl = "https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en";
     }
 
-    Console.WriteLine(feedUrl);
-
-    var feedItems = new List<object>();
-    var articles = new List<object>();
-    using (var reader = XmlReader.Create(feedUrl))
-    {
-        var feed = SyndicationFeed.Load(reader);
-        if (feed != null)
-        {
-            foreach (var item in feed.Items)
-            {
-                string desc = item.Summary?.Text;
-
-                if (desc != null)
-                {
-                    int found = 0;
-
-                    //remove prefix
-                    found = desc.IndexOf("_blank");
-                    desc = desc.Substring(found + 8);
-
-                    // remove suffix
-                    found = desc.IndexOf("</a>");
-                    desc = desc.Substring(0, found);
-                }
-
-
-                articles.Add(new
-                {
-                    Title = item.Title.Text,
-                    Url = item.Links.FirstOrDefault()?.Uri.ToString(),
-                    PublishedAt = item.PublishDate,
-                    Description = desc,
-                    Source = new
-                    {
-                        Name =  item.SourceFeed?.Title?.Text,
-                    },
-                    urlToImage = "null"
-                });
-            }
-        }
-    }
+    var articles = await GetArticles(feedUrl);
+    
     return Results.Json(new { articles });
 });
 
-app.MapGet("/api/news/search", async (string? query) =>
+async Task<List<object>> GetArticles(string feedUrl)
 {
-    Console.WriteLine("fetching ");
-    var today = DateTime.UtcNow;
-    var threeDaysAgo = today.AddDays(-3);
-    string feedUrl;
-    if (!string.IsNullOrWhiteSpace(query))
-    {
-        query = Uri.EscapeDataString(query);
-        feedUrl = $"https://news.google.com/rss/search?q={query}+after:{threeDaysAgo:yyyy-MM-dd}+before:{today:yyyy-MM-dd}&ceid=US:en&hl=en-US&gl=US";
-    }
-    else
-    {
-        feedUrl = "https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en"; // default
-    }
-
-    Console.WriteLine(feedUrl);
-
     var feedItems = new List<object>();
     var articles = new List<object>();
     using (var reader = XmlReader.Create(feedUrl))
@@ -323,13 +269,47 @@ app.MapGet("/api/news/search", async (string? query) =>
                     {
                         Name = item.SourceFeed?.Title?.Text,
                     },
-                    urlToImage = "null"
-                });
+                    urlToImage = await GetThumbnail(item.Title.Text)
+                }); ;
             }
         }
     }
+    return articles;
+}
+
+app.MapGet("/api/news/search", async (string? query) =>
+{
+    Console.WriteLine("fetching ");
+    var today = DateTime.UtcNow;
+    var threeDaysAgo = today.AddDays(-3);
+    string feedUrl;
+    if (!string.IsNullOrWhiteSpace(query))
+    {
+        query = Uri.EscapeDataString(query);
+        feedUrl = $"https://news.google.com/rss/search?q={query}+after:{threeDaysAgo:yyyy-MM-dd}+before:{today:yyyy-MM-dd}&ceid=US:en&hl=en-US&gl=US";
+    }
+    else
+    {
+        feedUrl = "https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en"; // default
+    }
+
+    Console.WriteLine(feedUrl);
+
+    var articles = await GetArticles(feedUrl);
+
     return Results.Json(new { articles });
 });
+
+async Task<string> GetThumbnail(string query)
+{
+    string apiKey = "x1KiNxRkFoUyIbnKpp-GWdfp8cnqR3ng_bmjNdBZxPI";
+    string url = $"https://api.unsplash.com/photos/random?query={Uri.EscapeDataString(query)}&client_id={apiKey}";
+    Console.WriteLine(url);
+    using var client = new HttpClient();
+    var response = await client.GetStringAsync(url);
+    var json = JsonSerializer.Deserialize<JsonElement>(response);
+    return json.GetProperty("urls").GetProperty("regular").GetString() ?? "null";
+}
 
 
 // Configure the HTTP request pipeline.
