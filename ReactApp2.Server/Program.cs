@@ -19,6 +19,7 @@ using HtmlAgilityPack;
 using System.Text.RegularExpressions;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using System.Text.Json;
+using NuGet.Protocol.Plugins;
 
 var AllowSpecificOrigins = "_AllowSpecificOrigins";
 
@@ -269,7 +270,7 @@ async Task<List<object>> GetArticles(string feedUrl)
                     {
                         Name = item.SourceFeed?.Title?.Text,
                     },
-                    urlToImage = await GetThumbnail(item.Title.Text)
+                    urlToImage = await GetThumbnailGoogle(item.Title.Text)
                 }); ;
             }
         }
@@ -309,6 +310,41 @@ async Task<string> GetThumbnail(string query)
     var response = await client.GetStringAsync(url);
     var json = JsonSerializer.Deserialize<JsonElement>(response);
     return json.GetProperty("urls").GetProperty("regular").GetString() ?? "null";
+}
+
+app.MapGet("/google", async () =>
+{
+    var res = await GetThumbnailGoogle("Israel's Netanyahu delays Gaza cease-fire vote, accusing Hamas of trying to back out of deal - Fox News");
+    return res;
+});
+
+async Task<string> GetThumbnailGoogle(string query)
+{
+    string engineID = "306194a2408eb4373";
+    string apiKey = "AIzaSyBm_gmIB-VAiAahdgu-xkUAKFSAl5-wSV0";
+    string apiUrl = $"https://www.googleapis.com/customsearch/v1?key={apiKey}&cx={engineID}&q={Uri.EscapeDataString(query)}";
+
+    
+    try
+    {
+        using var client = new HttpClient();
+        var response = await client.GetAsync(apiUrl);
+        if (!response.IsSuccessStatusCode)
+        {
+            Console.WriteLine($"Error: {response.StatusCode}");
+            return "null";
+        }
+        var responseContent = await response.Content.ReadAsStringAsync();
+        var json = JsonSerializer.Deserialize<JsonElement>(responseContent);
+        return json.GetProperty("items")[0].GetProperty("pagemap").GetProperty("metatags")[0].GetProperty("og:image").GetString() ?? "null";
+
+    }
+    catch (Exception ex)
+    {
+        Console.WriteLine($"Exception Thumbanil:{ex}");
+        return "null";
+
+    }
 }
 
 
