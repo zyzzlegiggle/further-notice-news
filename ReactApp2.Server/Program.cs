@@ -33,8 +33,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: AllowSpecificOrigins,
                       policy =>
                       {
-                          policy.WithOrigins("https://further-notice.onrender.com",
-                              "https://localhost:3000")
+                          policy.WithOrigins("https://further-notice.onrender.com")
                           .AllowAnyHeader()
                           .AllowAnyMethod()
                           .AllowCredentials();
