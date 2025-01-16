@@ -21,6 +21,7 @@ using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 using System.Text.Json;
 using NuGet.Protocol.Plugins;
 
+
 var AllowSpecificOrigins = "_AllowSpecificOrigins";
 
 var builder = WebApplication.CreateBuilder(args);
@@ -301,29 +302,28 @@ app.MapGet("/api/news/search", async (string? query) =>
     return Results.Json(new { articles });
 });
 
-async Task<string> GetThumbnail(string query)
-{
-    string apiKey = "x1KiNxRkFoUyIbnKpp-GWdfp8cnqR3ng_bmjNdBZxPI";
-    string url = $"https://api.unsplash.com/photos/random?query={Uri.EscapeDataString(query)}&client_id={apiKey}";
-    Console.WriteLine(url);
-    using var client = new HttpClient();
-    var response = await client.GetStringAsync(url);
-    var json = JsonSerializer.Deserialize<JsonElement>(response);
-    return json.GetProperty("urls").GetProperty("regular").GetString() ?? "null";
-}
-
 app.MapGet("/google", async () =>
 {
     var res = await GetThumbnailGoogle("Israel's Netanyahu delays Gaza cease-fire vote, accusing Hamas of trying to back out of deal - Fox News");
     return res;
 });
 
+app.MapGet("/env", async () =>
+{
+    var res = new
+    {
+        Engine = builder.Configuration["env:ENGINE_ID"]
+    };
+    return res;
+});
+
 async Task<string> GetThumbnailGoogle(string query)
 {
-    string engineID = "306194a2408eb4373";
-    string apiKey = "AIzaSyBm_gmIB-VAiAahdgu-xkUAKFSAl5-wSV0";
+    string engineID = builder.Configuration["env:ENGINE_ID"];
+    string apiKey = builder.Configuration["env:KEY_CUSTOMSEARCH"];
     string apiUrl = $"https://www.googleapis.com/customsearch/v1?key={apiKey}&cx={engineID}&q={Uri.EscapeDataString(query)}";
 
+    Console.WriteLine(apiUrl);
     
     try
     {
@@ -341,7 +341,7 @@ async Task<string> GetThumbnailGoogle(string query)
     }
     catch (Exception ex)
     {
-        Console.WriteLine($"Exception Thumbanil:{ex}");
+        Console.WriteLine($"Exception Thumbnail:{ex}");
         return "null";
 
     }
