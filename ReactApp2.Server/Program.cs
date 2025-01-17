@@ -47,6 +47,12 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.SameSite = SameSiteMode.None;
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+});
+
 // db contexts
 
 var UserDbContext = builder.Configuration.GetConnectionString("UserDbContext") ?? throw new InvalidOperationException("No connection string UserDbContext");
@@ -215,7 +221,6 @@ app.MapGet("/api/bookmark/get", async (UserManager<UserItem> userManager, UserDb
 // fetch news (following newsapi structure)
 app.MapGet("/api/news", async (string? category) =>
 {
-    Console.WriteLine("fetching ");
     var today = DateTime.UtcNow;
     var threeDaysAgo = today.AddDays(-3);
     string feedUrl;
@@ -280,7 +285,6 @@ async Task<List<object>> GetArticles(string feedUrl)
 
 app.MapGet("/api/news/search", async (string? query) =>
 {
-    Console.WriteLine("fetching ");
     var today = DateTime.UtcNow;
     var threeDaysAgo = today.AddDays(-3);
     string feedUrl;
@@ -294,7 +298,6 @@ app.MapGet("/api/news/search", async (string? query) =>
         feedUrl = "https://news.google.com/rss?hl=en-US&gl=US&ceid=US:en"; // default
     }
 
-    Console.WriteLine(feedUrl);
 
     var articles = await GetArticles(feedUrl);
 
@@ -322,7 +325,7 @@ async Task<string> GetThumbnailGoogle(string query)
     string apiKey = builder.Configuration["env:KEY_CUSTOMSEARCH"];
     string apiUrl = $"https://www.googleapis.com/customsearch/v1?key={apiKey}&cx={engineID}&q={Uri.EscapeDataString(query)}";
 
-    Console.WriteLine(apiUrl);
+
     
     try
     {
